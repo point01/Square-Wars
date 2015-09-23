@@ -4,5 +4,5 @@ Chesseract inherits a great deal from tactical board games such as Fire Emblem, 
 
 This game is being developed as a capstone project.
 
-#### [wiki page](https://github.com/SpylerMcCarThief/chesseract/wiki).
-#### [Trello page](https://trello.com/b/6nIQNK1d/main) to track development progress!
+#### Check the [Wiki page](https://github.com/SpylerMcCarThief/chesseract/wiki) for documentation and journals
+#### Check the [Trello page](https://trello.com/b/6nIQNK1d/main) to track development progress
