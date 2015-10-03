@@ -4,15 +4,16 @@ using System.Collections;
 public class Player : MonoBehaviour {
 	
 	public Vector2 gridPosition = Vector2.zero;
-	
+    public BaseUnitClass unit = new BaseUnitClass();
 	public Vector3 moveDestination;
-	public float moveSpeed = 10.0f;
+	public float moveSpeed;
 	
 	public bool moving = false;
 	public bool attacking = false;
-	
-	
-	public string playerName = "George";
+
+
+    public string playerName = "George";
+    public string playerLore = "Default";
 	public int HP = 25;
 	
 	public float attackChance = 0.75f;
@@ -28,13 +29,13 @@ public class Player : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
-	
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+
+    }
 	
 	public virtual void TurnUpdate () {
 		if (actionPoints <= 0) {
