@@ -19,7 +19,7 @@ public class Movement : MonoBehaviour
     }
 
     // example code for when a unit is right clicked/w/e to show movement/attack tiles
-    public static void Example(Player p)
+   /* public static void Example(Player p)
     {
         System.Collections.Generic.List<Tile> Movement = GetMovement(p);
         System.Collections.Generic.List<Tile> Attack = GetAttack(p);
@@ -34,5 +34,5 @@ public class Movement : MonoBehaviour
             MoveQueue = GetMovementPath(p, movetarget);
         while (MoveQueue.Count > 0) // may need to do stuff to wait for coroutines to finish etc.
             MovePlayerToTile(p, MoveQueue.Dequeue());
-    }
+    } */
 }

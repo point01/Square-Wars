@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject TilePrefab;
 	public GameObject UserPlayerPrefab;
 	public GameObject AIPlayerPrefab;
+    public BaseUnitClass baseUnit = new BaseSoldierClass();
 	
 	public int mapSize = 11;
 	
@@ -23,6 +24,7 @@ public class GameManager : MonoBehaviour {
 	void Start () {		
 		generateMap();
 		generatePlayers();
+        baseUnit = new BaseUnitClass();
 	}
 	
 	// Update is called once per frame
@@ -96,13 +98,29 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 	
+    /*public void setClass(UserPlayer player, string c)
+    {
+        if (c.Equals("Soldier")){
+            BaseUnitClass bu = new BaseSoldierClass();
+            player.playerName = bu.UnitClassName;
+            player.playerLore = bu.UnitClassLore;
+        }
+        else
+        {
+            Debug.Log("Nothing");
+        }
+    }*/
+
 	void generatePlayers() {
 		UserPlayer player;
+        BaseUnitClass baseUnit = new BaseSoldierClass();
 		
 		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(0 - Mathf.Floor(mapSize/2),1.5f, -0 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
 		player.gridPosition = new Vector2(0,0);
-		player.playerName = "Bob";				
-		
+        player.playerName = baseUnit.UnitClassName;
+        player.playerLore = baseUnit.UnitClassLore;
+        //setClass(player, "Soldier");
+        Debug.Log(player.playerLore);	
 		players.Add(player);
 		
 		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((mapSize-1) - Mathf.Floor(mapSize/2),1.5f, -(mapSize-1) + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();

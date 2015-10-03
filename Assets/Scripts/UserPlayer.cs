@@ -2,10 +2,10 @@ using UnityEngine;
 using System.Collections;
 
 public class UserPlayer : Player {
-	
+
 	// Use this for initialization
 	void Start () {
-	
+
 	}
 	
 	// Update is called once per frame
@@ -41,8 +41,7 @@ public class UserPlayer : Player {
 		float buttonWidth = 150;
 		
 		Rect buttonRect = new Rect(0, Screen.height - buttonHeight * 3, buttonWidth, buttonHeight);
-		
-		
+
 		//move button
 		if (GUI.Button(buttonRect, "Move")) {
 			if (!moving) {
@@ -79,4 +78,5 @@ public class UserPlayer : Player {
 		
 		base.TurnOnGUI ();
 	}
+
 }
