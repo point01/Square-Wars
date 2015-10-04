@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
 
 public class Player : MonoBehaviour {
 	
@@ -22,6 +24,9 @@ public class Player : MonoBehaviour {
 	public float damageRollSides = 6; //d6
 	
 	public int actionPoints = 2;
+
+    //List of stats
+    List<string> tempList = new List<string>();
 	
 	void Awake () {
 		moveDestination = transform.position;
@@ -34,7 +39,7 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+       
     }
 	
 	public virtual void TurnUpdate () {
@@ -44,9 +49,24 @@ public class Player : MonoBehaviour {
 			attacking = false;			
 			GameManager.instance.nextTurn();
 		}
+        updateStatus();
 	}
 	
 	public virtual void TurnOnGUI () {
 		
 	}
+
+    //Where the UI will be updated. 
+    void updateStatus()
+    {
+        //Clears old UI
+        tempList.Clear();
+        //Add all stats that want to be displayed
+        tempList.Add("Name: " + playerName);
+        tempList.Add("Health Points: " + HP.ToString());
+
+        //Update UI static variable
+        UnitInfo.unitInfo = tempList;
+
+    }
 }

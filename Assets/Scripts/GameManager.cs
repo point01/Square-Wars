@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour {
 		
 		if (players[currentPlayerIndex].HP > 0) players[currentPlayerIndex].TurnUpdate();
 		else nextTurn();
+
 	}
 	
 	void OnGUI () {
