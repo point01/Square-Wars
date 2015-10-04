@@ -63,7 +63,10 @@ public class Player : MonoBehaviour {
         tempList.Clear();
         //Add all stats that want to be displayed
         tempList.Add("Name: " + playerName);
-        tempList.Add("Health Points: " + HP.ToString());
+        tempList.Add("HP: " + HP.ToString());
+        tempList.Add("Atk Dmg: " + damageBase.ToString());
+        tempList.Add("AP: " + actionPoints.ToString());
+        tempList.Add("Def Red: " + defenseReduction.ToString());
 
         //Update UI static variable
         UnitInfo.unitInfo = tempList;

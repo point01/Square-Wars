@@ -16,15 +16,15 @@ public class UnitInfo : MonoBehaviour {
 
         //Instantiate holders
         unitInfo.Add("Name:");
-        unitInfo.Add("Health:");
-        unitInfo.Add("Info:");
-        unitInfo.Add("Lore:");
+        unitInfo.Add("Health:");        
     }
 	
 	// Update is called once per frame
 	void Update () {
 
+        //Convert the List to a String
         string info = string.Join("\n", unitInfo.ToArray());
+        //Display the updated info
         infoDisplayed.text = info;
     }
 }
