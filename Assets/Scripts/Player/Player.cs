@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-
+//Parts/all of this should probably be combined with BaseUnitClass
 public class Player : MonoBehaviour {
 	
 	public Vector2 gridPosition = Vector2.zero;
@@ -17,6 +17,9 @@ public class Player : MonoBehaviour {
     public string playerName = "George";
     public string playerLore = "Default";
 	public int HP = 25;
+    public int MovementTiles = 3;
+    public int MovementJump = 0;
+    public int AttackRange = 1;
 	
 	public float attackChance = 0.75f;
 	public float defenseReduction = 0.15f;
