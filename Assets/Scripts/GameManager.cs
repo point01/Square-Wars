@@ -9,13 +9,14 @@ public class GameManager : MonoBehaviour {
 	public GameObject UserPlayerPrefab;
 	public GameObject AIPlayerPrefab;
     public BaseUnitClass baseUnit = new BaseSoldierClass();
-	
-	public int mapSize = 11;
-	
-	List <List<Tile>> map = new List<List<Tile>>();
-	public List <Player> players = new List<Player>();
-    public List<Player> team2 = new List<Player>();
-	public int currentPlayerIndex = 0;
+
+    static public int mapSize = 11;
+
+    static public List<List<Tile>> map = new List<List<Tile>>();
+	static public List <Player> players = new List<Player>();
+    static public List<Player> team2 = new List<Player>();
+	static public int currentPlayerIndex = 0;
+    static public Player CurrentTurnPlayer;
 	
 	void Awake() {
 		instance = this;
@@ -41,17 +42,19 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	public void nextTurn() {
+        UserPlayerPrefab.GetComponent<UserPlayer>().StopEverything();
 		if (currentPlayerIndex + 1 < players.Count) {
 			currentPlayerIndex++;
 		} else {
 			currentPlayerIndex = 0;
 		}
+        CurrentTurnPlayer = players[currentPlayerIndex];
 	}
 	
 	public void moveCurrentPlayer(Tile destTile) {
-        
 		players[currentPlayerIndex].gridPosition = destTile.gridPosition;
 		players[currentPlayerIndex].moveDestination = destTile.transform.position + 1.5f * Vector3.up;
+        UserPlayerPrefab.GetComponent<UserPlayer>().StopEverything();
 	}
 	
 	public void attackWithCurrentPlayer(Tile destTile) {
@@ -60,12 +63,11 @@ public class GameManager : MonoBehaviour {
 			if (p.gridPosition == destTile.gridPosition) {
 				target = p;
 			}
-		}
+        }
 		
 		if (target != null) {
 			//Debug.Log ("p.x: " + players[currentPlayerIndex].gridPosition.x + ", p.y: " + players[currentPlayerIndex].gridPosition.y + " t.x: " + target.gridPosition.x + ", t.y: " + target.gridPosition.y);
-			if (players[currentPlayerIndex].gridPosition.x >= target.gridPosition.x - 1 && players[currentPlayerIndex].gridPosition.x <= target.gridPosition.x + 1 &&
-				players[currentPlayerIndex].gridPosition.y >= target.gridPosition.y - 1 && players[currentPlayerIndex].gridPosition.y <= target.gridPosition.y + 1) {
+			if (UserPlayer.AttackList.Contains(destTile)) {
 				players[currentPlayerIndex].actionPoints--;
 				
 				//attack logic
@@ -83,10 +85,11 @@ public class GameManager : MonoBehaviour {
 					Debug.Log(players[currentPlayerIndex].playerName + " missed " + target.playerName + "!");
 				}
 			} else {
-				Debug.Log ("Target is not adjacent!");
+				Debug.Log ("Target is not in range!");
 			}
 		}
-	}
+        UserPlayerPrefab.GetComponent<UserPlayer>().StopEverything();
+    }
 	
 	void generateMap() {
 		map = new List<List<Tile>>();
@@ -135,6 +138,8 @@ public class GameManager : MonoBehaviour {
 		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2),1.5f, -4 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
 		player.gridPosition = new Vector2(4,4);
 		player.playerName = "Lars";
+        player.AttackRange = 3;
+        player.MovementTiles = 1;
 		
 		players.Add(player);
 		

@@ -10,7 +10,7 @@ public class UserPlayer : Player {
 	
 	// Update is called once per frame
 	void Update () {
-		if (GameManager.instance.players[GameManager.instance.currentPlayerIndex] == this) {
+		if (GameManager.players[GameManager.currentPlayerIndex] == this) {
 			transform.GetComponent<Renderer>().material.color = Color.green;
 		} else {
 			transform.GetComponent<Renderer>().material.color = Color.white;
@@ -32,7 +32,7 @@ public class UserPlayer : Player {
 				actionPoints--;
 			}
 		}
-		
+
 		base.TurnUpdate ();
 	}
 	
@@ -44,26 +44,22 @@ public class UserPlayer : Player {
 
 		//move button
 		if (GUI.Button(buttonRect, "Move")) {
-			if (!moving) {
-				moving = true;
-				attacking = false;
-			} else {
-				moving = false;
-				attacking = false;
-			}
+			//if (!moving) {
+                StartMovement();
+			//} else {
+            //    StopEverything();
+			//}
 		}
 		
 		//attack button
 		buttonRect = new Rect(0, Screen.height - buttonHeight * 2, buttonWidth, buttonHeight);
 		
 		if (GUI.Button(buttonRect, "Attack")) {
-			if (!attacking) {
-				moving = false;
-				attacking = true;
-			} else {
-				moving = false;
-				attacking = false;
-			}
+			//if (!attacking) {
+                StartAttack();
+			//} else {
+            //    StopEverything();
+			//}
 		}
 		
 		//end turn button
@@ -71,12 +67,39 @@ public class UserPlayer : Player {
 		
 		if (GUI.Button(buttonRect, "End Turn")) {
 			actionPoints = 2;
-			moving = false;
-			attacking = false;			
+            StopEverything();	
 			GameManager.instance.nextTurn();
 		}
 		
 		base.TurnOnGUI ();
 	}
 
+    public static System.Collections.Generic.List<Tile> MoveList;
+    public static System.Collections.Generic.List<Tile> AttackList;
+    private void StartMovement(){
+        StopEverything();
+        AttackList = null;
+        GameManager.CurrentTurnPlayer = GameManager.players[GameManager.currentPlayerIndex];
+        MoveList = Movement.GetMovement(GameManager.CurrentTurnPlayer);
+        Movement.PaintTiles(MoveList, AttackList);
+        moving = true;
+        attacking = false;
+    }
+    private void StartAttack()
+    {
+        StopEverything();
+        MoveList = null;
+        GameManager.CurrentTurnPlayer = GameManager.players[GameManager.currentPlayerIndex];
+        AttackList = Movement.GetAttack(GameManager.CurrentTurnPlayer);
+        Movement.PaintTiles(MoveList, AttackList);
+        moving = false;
+        attacking = true;
+    }
+    public void StopEverything()
+    {
+        Movement.UnPaintTiles(MoveList);
+        Movement.UnPaintTiles(AttackList);
+        moving = false;
+        attacking = false;
+    }
 }
