@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
 	
 	List <List<Tile>> map = new List<List<Tile>>();
 	public List <Player> players = new List<Player>();
+    public List<Player> team2 = new List<Player>();
 	public int currentPlayerIndex = 0;
 	
 	void Awake() {
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour {
 		
 		if (players[currentPlayerIndex].HP > 0) players[currentPlayerIndex].TurnUpdate();
 		else nextTurn();
+
 	}
 	
 	void OnGUI () {
@@ -47,6 +49,7 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	public void moveCurrentPlayer(Tile destTile) {
+        
 		players[currentPlayerIndex].gridPosition = destTile.gridPosition;
 		players[currentPlayerIndex].moveDestination = destTile.transform.position + 1.5f * Vector3.up;
 	}
