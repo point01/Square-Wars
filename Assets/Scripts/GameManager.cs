@@ -53,7 +53,8 @@ public class GameManager : MonoBehaviour {
 	
 	public void moveCurrentPlayer(Tile destTile) {
 		players[currentPlayerIndex].gridPosition = destTile.gridPosition;
-		players[currentPlayerIndex].moveDestination = destTile.transform.position + 1.5f * Vector3.up;
+        players[currentPlayerIndex].moveDestination = destTile.transform.position + 1.5f * Vector3.up;
+        players[currentPlayerIndex].moveQueue = Movement.CurrentMovementTree.GetMoveQueue(destTile);
         UserPlayerPrefab.GetComponent<UserPlayer>().StopEverything();
 	}
 	
@@ -132,6 +133,7 @@ public class GameManager : MonoBehaviour {
 		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((mapSize-1) - Mathf.Floor(mapSize/2),1.5f, -(mapSize-1) + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
 		player.gridPosition = new Vector2(mapSize-1,mapSize-1);
 		player.playerName = "Kyle";
+        player.MovementTiles = 10;
 		
 		players.Add(player);
 				

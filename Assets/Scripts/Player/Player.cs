@@ -8,7 +8,9 @@ public class Player : MonoBehaviour {
 	public Vector2 gridPosition = Vector2.zero;
     public BaseUnitClass unit = new BaseUnitClass();
 	public Vector3 moveDestination;
+    public Tile DestinationTile;
 	public float moveSpeed;
+    public System.Collections.Generic.Queue<Tile> moveQueue;
 	
 	public bool moving = false;
 	public bool attacking = false;
