@@ -78,8 +78,9 @@ public class UserPlayer : Player {
     public static System.Collections.Generic.List<Tile> AttackList;
     private void StartMovement(){
         StopEverything();
-        AttackList = null;
         GameManager.CurrentTurnPlayer = GameManager.players[GameManager.currentPlayerIndex];
+        Movement.GenerateMovementTree(GameManager.CurrentTurnPlayer);
+        AttackList = null;
         MoveList = Movement.GetMovement(GameManager.CurrentTurnPlayer);
         Movement.PaintTiles(MoveList, AttackList);
         moving = true;
