@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BaseSoldierClass : BaseUnitClass{
-
-    public BaseSoldierClass()
+public class SoldierUnit : BaseUnit
+{
+    public SoldierUnit()
     {
         UnitClassName = "Soldier";
         UnitClassLore = "Basic af";
@@ -12,6 +12,5 @@ public class BaseSoldierClass : BaseUnitClass{
         UnitClassDEF = 3;
         UnitClassSPD = 3;
         UnitClassAGI = 3;
-
     }
 }

@@ -3,16 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 
 //Parts/all of this should probably be combined with BaseUnitClass
-public class Player : MonoBehaviour {
+public class BaseUnit : MonoBehaviour {
 	
+    // Old
 	public Vector2 gridPosition = Vector2.zero;
-    public BaseUnitClass unit = new BaseUnitClass();
 	public Vector3 moveDestination;
 	public float moveSpeed;
 	
 	public bool moving = false;
 	public bool attacking = false;
-
 
     public string playerName = "George";
     public string playerLore = "Default";
@@ -27,6 +26,68 @@ public class Player : MonoBehaviour {
 	public float damageRollSides = 6; //d6
 	
 	public int actionPoints = 2;
+    // Old
+
+    //Description
+    private string unitClassName;
+    private string unitClassLore;
+
+    //STATS
+    private int unitClassHP;
+    private int unitClassSTR;
+    private int unitClassDEF;
+    private int unitClassSPD;
+    private int unitClassAGI;
+
+    // set + get Name string
+    public string UnitClassName
+    {
+        get { return unitClassName; }
+        set { unitClassName = value; }
+    }
+
+    // set + get Lore string 
+    public string UnitClassLore
+    {
+        get { return unitClassLore; }
+        set { unitClassLore = value; }
+    }
+
+    // set + get HP
+    public int UnitClassHP
+    {
+        get { return unitClassHP; }
+        set { unitClassHP = value; }
+    }
+
+    // set + get STR
+    public int UnitClassSTR
+    {
+        get { return unitClassSTR; }
+        set { unitClassSTR = value; }
+    }
+
+    // set + get DEF
+    public int UnitClassDEF
+    {
+        get { return unitClassDEF; }
+        set { unitClassDEF = value; }
+    }
+
+    // set + get SPD
+    public int UnitClassSPD
+    {
+        get { return unitClassSPD; }
+        set { unitClassSPD = value; }
+    }
+
+    // set + get AGI
+    public int UnitClassAGI
+    {
+        get { return unitClassAGI; }
+        set { unitClassAGI = value; }
+    }
+
 
     //List of stats
     List<string> tempList = new List<string>();

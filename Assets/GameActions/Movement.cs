@@ -17,11 +17,11 @@ public class Movement : MonoBehaviour
         retval += t;
         return retval;
     }
-    public static Tile GetTileFromPlayer(Player p)
+    public static Tile GetTileFromPlayer(BaseUnit p)
     {
         return GameManager.map[(int)p.gridPosition.x][(int)p.gridPosition.y];
     }
-    public static System.Collections.Generic.List<Tile> GetMovement(Player mover)
+    public static System.Collections.Generic.List<Tile> GetMovement(BaseUnit mover)
     {
         System.Collections.Generic.List<Tile> retval = new System.Collections.Generic.List<Tile>();
         for (int i = 0; i < GameManager.mapSize; ++i)
@@ -32,13 +32,13 @@ public class Movement : MonoBehaviour
                     retval.Add(GameManager.map[i][j]);
             }
         }
-        foreach (Player p in GameManager.players)
+        foreach (BaseUnit p in GameManager.players)
         {
             retval.Remove(GameManager.map[(int)p.gridPosition.x][(int)p.gridPosition.y]);
         }
         return retval;
     }
-    public static System.Collections.Generic.List<Tile> GetAttack(Player mover)
+    public static System.Collections.Generic.List<Tile> GetAttack(BaseUnit mover)
     {
         System.Collections.Generic.List<Tile> retval = new System.Collections.Generic.List<Tile>();
         for (int i = 0; i < GameManager.mapSize; ++i)
@@ -51,8 +51,10 @@ public class Movement : MonoBehaviour
         }
         return retval;
     }
-    public static System.Collections.Generic.Queue<Tile> GetMovementPath(Player mover, Tile destination)
+
+    public static System.Collections.Generic.Queue<Tile> GetMovementPath(BaseUnit mover, Tile destination)
     { return null; }
+
     public static void PaintTiles(System.Collections.Generic.List<Tile> movetiles, System.Collections.Generic.List<Tile> attacktiles)
     {
         if (movetiles != null)
@@ -71,12 +73,14 @@ public class Movement : MonoBehaviour
                     t.transform.GetComponent<Renderer>().material.color = Color.red;
         }
     }
+
     public static void UnPaintTiles(System.Collections.Generic.List<Tile> tiles)
     {
         if (tiles != null)
             foreach (Tile t in tiles)
-                t.transform.GetComponent<Renderer>().material.color = Color.white;
+                t.transform.GetComponent<Renderer>().material.color = t.tileColor;
     }
+
     /*
     // example code for when a unit is right clicked/w/e to show movement/attack tiles
     public static void Example(Player p)

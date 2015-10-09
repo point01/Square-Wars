@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class UserPlayer : Player {
+public class PlayerUnit : BaseUnit {
 
 	// Use this for initialization
 	void Start () {
@@ -75,16 +75,21 @@ public class UserPlayer : Player {
 	}
 
     public static System.Collections.Generic.List<Tile> MoveList;
+
     public static System.Collections.Generic.List<Tile> AttackList;
-    private void StartMovement(){
+
+    private void StartMovement()
+    {
         StopEverything();
         AttackList = null;
         GameManager.CurrentTurnPlayer = GameManager.players[GameManager.currentPlayerIndex];
         MoveList = Movement.GetMovement(GameManager.CurrentTurnPlayer);
         Movement.PaintTiles(MoveList, AttackList);
+
         moving = true;
         attacking = false;
     }
+
     private void StartAttack()
     {
         StopEverything();
@@ -92,9 +97,11 @@ public class UserPlayer : Player {
         GameManager.CurrentTurnPlayer = GameManager.players[GameManager.currentPlayerIndex];
         AttackList = Movement.GetAttack(GameManager.CurrentTurnPlayer);
         Movement.PaintTiles(MoveList, AttackList);
+
         moving = false;
         attacking = true;
     }
+
     public void StopEverything()
     {
         Movement.UnPaintTiles(MoveList);
