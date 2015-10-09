@@ -69,7 +69,7 @@ public class Movement : MonoBehaviour
         public Queue<Tile> GetMoveQueue(Tile t)
         {
             TileTree owner = ContainsT(t);
-            if (owner == null)
+            if (owner != null)
             {
                 Stack<Tile> reverse = new Stack<Tile>();
                 while (owner.Head != null)
@@ -215,6 +215,7 @@ public class Movement : MonoBehaviour
             {
                 TileTree tt = new TileTree();
                 tt.Value = t;
+                tt.Head = tree;
                 tree.Nodes.Add(tt);
                 Remove.Enqueue(t);
             }
