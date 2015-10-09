@@ -293,14 +293,20 @@ public class Movement : MonoBehaviour
         return retval;
     }
     public static System.Collections.Generic.Queue<Tile> GetMovementPath(Player mover, Tile destination)
-    { return null; }
+    {
+        return CurrentMovementTree.GetMoveQueue(destination);
+    }
     public static void PaintTiles(System.Collections.Generic.List<Tile> movetiles, System.Collections.Generic.List<Tile> attacktiles)
     {
-        if (movetiles == null)
-            return;
-        foreach (Tile t in movetiles)
-            if (t != null)
-                t.transform.GetComponent<Renderer>().material.color = Color.blue;
+        if (movetiles != null)
+            foreach (Tile t in movetiles)
+                if (t != null)
+                    t.transform.GetComponent<Renderer>().material.color = Color.blue;
+        if (attacktiles != null)
+            foreach (Tile t in attacktiles)
+                if (movetiles == null || !movetiles.Contains(t))
+                    t.transform.GetComponent<Renderer>().material.color = Color.red;
+
         /*if (movetiles != null)
         {
             foreach (Tile t in movetiles)
@@ -323,7 +329,7 @@ public class Movement : MonoBehaviour
                     foreach (Tile t in tiles)
                         t.transform.GetComponent<Renderer>().material.color = Color.white;*/
         for (int i = 0; i < GameManager.mapSize; ++i)
-        {
+        {//this should probably be moved to game manager and have things like tile effects incorporated into it
             for (int j = 0; j < GameManager.mapSize; ++j)
                 GameManager.map[i][j].transform.GetComponent<Renderer>().material.color = Color.white;
         }
