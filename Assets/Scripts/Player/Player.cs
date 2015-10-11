@@ -2,13 +2,15 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-
+//Parts/all of this should probably be combined with BaseUnitClass
 public class Player : MonoBehaviour {
 	
 	public Vector2 gridPosition = Vector2.zero;
     public BaseUnitClass unit = new BaseUnitClass();
 	public Vector3 moveDestination;
+    public Tile DestinationTile;
 	public float moveSpeed;
+    public System.Collections.Generic.Queue<Tile> moveQueue;
 	
 	public bool moving = false;
 	public bool attacking = false;
@@ -17,6 +19,9 @@ public class Player : MonoBehaviour {
     public string playerName = "George";
     public string playerLore = "Default";
 	public int HP = 25;
+    public int MovementTiles = 3;
+    public int MovementJump = 0;
+    public int AttackRange = 1;
 	
 	public float attackChance = 0.75f;
 	public float defenseReduction = 0.15f;
