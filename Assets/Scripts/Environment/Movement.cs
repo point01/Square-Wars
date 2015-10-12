@@ -134,7 +134,13 @@ public class Movement : MonoBehaviour
             }
         }
         // This will need to be tweaked if we allow movement through allied units
-        foreach (Player p in GameManager.players)
+        foreach (Player p in GameManager.currentTeam.myRoster)
+        {
+            temp = GetTileFromPlayer(p);
+            if (all.Contains(temp))
+                all.Remove(temp);
+        }
+        foreach (Player p in GameManager.enemyTeam.myRoster)
         {
             temp = GetTileFromPlayer(p);
             if (all.Contains(temp))
