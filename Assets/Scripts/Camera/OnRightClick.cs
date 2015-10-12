@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+
+[DisallowMultipleComponent]
 public class OnRightClick : MonoBehaviour
 {
     public RaycastHit hit;
