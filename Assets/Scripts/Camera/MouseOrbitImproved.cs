@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[DisallowMultipleComponent]
 [AddComponentMenu("Camera-Control/Mouse Orbit with zoom")]
 public class MouseOrbitImproved : MonoBehaviour
 {
 
     public Transform target;
     public float distance = 5.0f;
-    public float xSpeed = 120.0f;
+    public float xSpeed = 0.1f;
     public float ySpeed = 120.0f;
 
     public float yMinLimit = -20f;
@@ -16,7 +17,7 @@ public class MouseOrbitImproved : MonoBehaviour
     public float distanceMin = .5f;
     public float distanceMax = 15f;
 
-    private Rigidbody rigidbody;
+    private Rigidbody rigidBod;
 
     float x = 0.0f;
     float y = 0.0f;
@@ -28,12 +29,12 @@ public class MouseOrbitImproved : MonoBehaviour
         x = angles.y;
         y = angles.x;
 
-        rigidbody = GetComponent<Rigidbody>();
+        rigidBod = GetComponent<Rigidbody>();
 
         // Make the rigid body not change rotation
-        if (rigidbody != null)
+        if (rigidBod != null)
         {
-            rigidbody.freezeRotation = true;
+            rigidBod.freezeRotation = true;
         }
     }
 
@@ -41,30 +42,25 @@ public class MouseOrbitImproved : MonoBehaviour
     {
         if (target)
         {
-            if (Input.GetMouseButton(1))  //LEFT CLICK
-                                              //1 is right click, 2 is middle click, 0 is left click
+            if (Input.GetMouseButton(1))  //0 : left click, 1 : right click, 2 : middle click
             {
                 x += Input.GetAxis("Mouse X") * xSpeed * distance * 0.02f;
                 y -= Input.GetAxis("Mouse Y") * ySpeed * 0.02f;
 
                 y = ClampAngle(y, yMinLimit, yMaxLimit);
+            }
 
                 Quaternion rotation = Quaternion.Euler(y, x, 0);
 
                 distance = Mathf.Clamp(distance - Input.GetAxis("Mouse ScrollWheel") * 5, distanceMin, distanceMax);
 
-                RaycastHit hit;
-                if (Physics.Linecast(target.position, transform.position, out hit))
-                {
-                    distance -= hit.distance;
-                }
                 Vector3 negDistance = new Vector3(0.0f, 0.0f, -distance);
                 Vector3 position = rotation * negDistance + target.position;
 
                 transform.rotation = rotation;
                 transform.position = position;
             }
-        }
+        
     }
 
     public void setTarget(Transform tar)

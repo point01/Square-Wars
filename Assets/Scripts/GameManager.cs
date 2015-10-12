@@ -23,8 +23,15 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	// Use this for initialization
-	void Start () {		
-		generateMap();
+	void Start () {
+
+        
+        TilePrefab.AddComponent<GrassTile>();
+        TilePrefab.AddComponent<Transform>();
+        TilePrefab.AddComponent<OnRightClick>();
+        
+
+        generateMap();
 		generatePlayers();
         baseUnit = new BaseUnitClass();
 	}
@@ -91,20 +98,38 @@ public class GameManager : MonoBehaviour {
 		}
         UserPlayerPrefab.GetComponent<UserPlayer>().StopEverything();
     }
-	
-	void generateMap() {
-		map = new List<List<Tile>>();
-		for (int i = 0; i < mapSize; i++) {
-			List <Tile> row = new List<Tile>();
-			for (int j = 0; j < mapSize; j++) {
-				Tile tile = ((GameObject)Instantiate(TilePrefab, new Vector3(i - Mathf.Floor(mapSize/2),0, -j + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<Tile>();
-				tile.gridPosition = new Vector2(i, j);
-				row.Add (tile);
-			}
-			map.Add(row);
-		}
-	}
-	
+
+    void generateMap()
+    {
+        map = new List<List<Tile>>();
+        for (int i = 0; i < mapSize; i++)
+        {
+
+            // Create one row of tiles
+            List<Tile> row = new List<Tile>();
+
+            for (int j = 0; j < mapSize; j++)
+            {
+
+                Vector3 position = new Vector3(i - Mathf.Floor(mapSize / 2), 0, -j + Mathf.Floor(mapSize / 2));
+                Quaternion rotation = Quaternion.Euler(new Vector3());
+
+                Tile tile = ((GameObject)Instantiate(TilePrefab, position, rotation)).GetComponent<GrassTile>();
+
+                if (tile == null)
+                {
+                    Debug.Log("WHARRGARBL");
+                }
+
+                // Add tile's own position on grid to the tile
+                tile.gridPosition = new Vector2(i, j);
+
+                row.Add(tile);
+            }
+            map.Add(row);
+        }
+    }
+
     /*public void setClass(UserPlayer player, string c)
     {
         if (c.Equals("Soldier")){
@@ -118,7 +143,7 @@ public class GameManager : MonoBehaviour {
         }
     }*/
 
-	void generatePlayers() {
+    void generatePlayers() {
 		UserPlayer player;
         BaseUnitClass baseUnit = new BaseSoldierClass();
 		
