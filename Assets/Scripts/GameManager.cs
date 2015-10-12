@@ -224,13 +224,14 @@ public class GameManager : MonoBehaviour {
 		player.gridPosition = new Vector2(1,(mapSize/2));
         player.playerName = baseUnit.UnitClassName;
         player.playerLore = baseUnit.UnitClassLore;
-    //    setClass(player, "Soldier");
+        player.setStats(player, "Soldier");
   //      Debug.Log(player.playerLore);	
 
 		team1.myRoster.Add(player);
 		
 		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1 - Mathf.Floor(mapSize/2),1.5f, -(mapSize/2-1) + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
 		player.gridPosition = new Vector2(1,(mapSize/2-1));
+        player.setStats(player, "Soldier");
 		player.playerName = "Kyle";
         player.MovementTiles = 3;
 
@@ -238,6 +239,7 @@ public class GameManager : MonoBehaviour {
 
         player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1 - Mathf.Floor(mapSize/2),1.5f, -(mapSize/2+1) + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
 		player.gridPosition = new Vector2(1,(mapSize/2+1));
+        player.setStats(player, "Soldier");
 		player.playerName = "Lars";
         player.AttackRange = 3;
         player.MovementTiles = 1;
@@ -246,6 +248,7 @@ public class GameManager : MonoBehaviour {
 
         player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((mapSize-1) - Mathf.Floor(mapSize / 2), 1.5f, -1 + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
         player.gridPosition = new Vector2(mapSize-1, 1);
+        player.setStats(player, "Soldier");
         player.playerName = "Steve";
         player.AttackRange = 5;
         player.MovementTiles = 3;
@@ -254,6 +257,7 @@ public class GameManager : MonoBehaviour {
 
         player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((mapSize - 1) - Mathf.Floor(mapSize / 2), 1.5f, -2 + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
         player.gridPosition = new Vector2(mapSize-1, 2);
+        player.setStats(player, "Soldier");
         player.playerName = "Sir William";
         player.AttackRange = 2;
         player.MovementTiles = 6;
@@ -262,6 +266,7 @@ public class GameManager : MonoBehaviour {
 
         player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((mapSize - 1) - Mathf.Floor(mapSize / 2), 1.5f, -3 + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
         player.gridPosition = new Vector2(mapSize-1, 3);
+        player.setStats(player, "Soldier");
         player.playerName = "Tyler";
         player.AttackRange = 2;
         player.MovementTiles = 6;

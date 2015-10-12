@@ -59,8 +59,27 @@ public class Player : MonoBehaviour {
 		}
         updateStatus();
 	}
-	
-	public virtual void TurnOnGUI () {
+
+    public void setStats(UserPlayer player, string unitClass)
+    {
+        if (unitClass.Equals("Soldier"))
+        {
+            BaseUnitClass bu = new BaseSoldierClass();
+            player.playerName = bu.UnitClassName;
+            player.playerLore = bu.UnitClassLore;
+            player.HP = bu.UnitClassHP;
+            player.damageBase = bu.UnitClassSTR;
+            player.defenseReduction = bu.UnitClassDEF;
+            player.MovementTiles = bu.UnitClassSPD;
+            player.AttackRange = 1;
+            //player.playerAGI = bu.UnitClassAGI;
+
+        }
+        else
+            Debug.Log("Do Nothing");
+    }
+
+    public virtual void TurnOnGUI () {
 		
 	}
 
