@@ -338,7 +338,10 @@ public class Movement : MonoBehaviour
         for (int i = 0; i < GameManager.mapSize; ++i)
         {//this should probably be moved to game manager and have things like tile effects incorporated into it
             for (int j = 0; j < GameManager.mapSize; ++j)
-                GameManager.map[i][j].transform.GetComponent<Renderer>().material.color = Color.white;
+            {
+                Tile targetTile = GameManager.map[i][j];
+                targetTile.transform.GetComponent<Renderer>().material.color = targetTile.tileColor;
+            }
         }
     }
     /*
