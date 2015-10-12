@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject AIPlayerPrefab;
     public BaseUnitClass baseUnit = new BaseSoldierClass();
 
+    //Intstantiate Teams
     static public Team team1 = new Team();        
     static public Team team2 = new Team();
     static public bool gameOver;
@@ -36,15 +37,17 @@ public class GameManager : MonoBehaviour {
 		generateMap();
 		generatePlayers();
         baseUnit = new BaseUnitClass();
+        //Instantiate gameover
         gameOver = false;
 
     }
 	
 	// Update is called once per frame
 	void Update () {
-
+        //If not gameOver
         if (!gameOver)
         {
+            //Check enemy roster
             if (enemyTeam.myRoster.Exists(x => x.HP > 0))
             {
 
@@ -76,6 +79,7 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	public void nextTurn() {
+        //Check if game going
         if (!gameOver)
         {
             Debug.Log(currentPlayerIndex.ToString());
