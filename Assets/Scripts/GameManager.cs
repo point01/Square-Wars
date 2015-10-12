@@ -192,48 +192,48 @@ public class GameManager : MonoBehaviour {
         team2.teamName = "Team2";
        
 
-		//player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(0 - Mathf.Floor(mapSize/2),1.5f, -0 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
-		//player.gridPosition = new Vector2(0,0);
-  //      player.playerName = baseUnit.UnitClassName;
-  //      player.playerLore = baseUnit.UnitClassLore;
-  //      //setClass(player, "Soldier");
+		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1 - Mathf.Floor(mapSize/2),1.5f, -(mapSize/2) + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+		player.gridPosition = new Vector2(1,(mapSize/2));
+        player.playerName = baseUnit.UnitClassName;
+        player.playerLore = baseUnit.UnitClassLore;
+    //    setClass(player, "Soldier");
   //      Debug.Log(player.playerLore);	
 
-		//team1.myRoster.Add(player);
+		team1.myRoster.Add(player);
 		
-		//player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((mapSize-1) - Mathf.Floor(mapSize/2),1.5f, -(mapSize-1) + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
-		//player.gridPosition = new Vector2(mapSize-1,mapSize-1);
-		//player.playerName = "Kyle";
-  //      player.MovementTiles = 3;
+		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1 - Mathf.Floor(mapSize/2),1.5f, -(mapSize/2-1) + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+		player.gridPosition = new Vector2(1,(mapSize/2-1));
+		player.playerName = "Kyle";
+        player.MovementTiles = 3;
 
-  //      team1.myRoster.Add(player);
+        team1.myRoster.Add(player);
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2),1.5f, -4 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
-		player.gridPosition = new Vector2(4,4);
+        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1 - Mathf.Floor(mapSize/2),1.5f, -(mapSize/2+1) + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+		player.gridPosition = new Vector2(1,(mapSize/2+1));
 		player.playerName = "Lars";
         player.AttackRange = 3;
         player.MovementTiles = 1;
 
         team1.myRoster.Add(player);
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1 - Mathf.Floor(mapSize / 2), 1.5f, -1 + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
-        player.gridPosition = new Vector2(1, 1);
+        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((mapSize-1) - Mathf.Floor(mapSize / 2), 1.5f, -1 + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+        player.gridPosition = new Vector2(mapSize-1, 1);
         player.playerName = "Steve";
         player.AttackRange = 5;
         player.MovementTiles = 3;
 
         team2.myRoster.Add(player);
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(3 - Mathf.Floor(mapSize / 2), 1.5f, -3 + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
-        player.gridPosition = new Vector2(3, 3);
+        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((mapSize - 1) - Mathf.Floor(mapSize / 2), 1.5f, -2 + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+        player.gridPosition = new Vector2(mapSize-1, 2);
         player.playerName = "Sir William";
         player.AttackRange = 2;
         player.MovementTiles = 6;
 
         team2.myRoster.Add(player);
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(5 - Mathf.Floor(mapSize / 2), 1.5f, -3 + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
-        player.gridPosition = new Vector2(5, 3);
+        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((mapSize - 1) - Mathf.Floor(mapSize / 2), 1.5f, -3 + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+        player.gridPosition = new Vector2(mapSize-1, 3);
         player.playerName = "Tyler";
         player.AttackRange = 2;
         player.MovementTiles = 6;
