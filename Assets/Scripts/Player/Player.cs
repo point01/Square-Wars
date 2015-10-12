@@ -14,7 +14,7 @@ public class Player : MonoBehaviour {
 	
 	public bool moving = false;
 	public bool attacking = false;
-
+    public bool isAlive = false;
 
     public string playerName = "George";
     public string playerLore = "Default";
@@ -23,10 +23,12 @@ public class Player : MonoBehaviour {
     public int MovementJump = 0;
     public int AttackRange = 1;
 	
+
 	public float attackChance = 0.75f;
 	public float defenseReduction = 0.15f;
 	public int damageBase = 5;
 	public float damageRollSides = 6; //d6
+    
 	
 	public int actionPoints = 2;
 
@@ -48,6 +50,7 @@ public class Player : MonoBehaviour {
     }
 	
 	public virtual void TurnUpdate () {
+
 		if (actionPoints <= 0) {
 			actionPoints = 2;
 			moving = false;
@@ -60,6 +63,8 @@ public class Player : MonoBehaviour {
 	public virtual void TurnOnGUI () {
 		
 	}
+
+    
 
     //Where the UI will be updated. 
     void updateStatus()

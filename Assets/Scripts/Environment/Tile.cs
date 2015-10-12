@@ -31,9 +31,9 @@ public class Tile : MonoBehaviour {
 	
 	
 	void OnMouseDown() {
-		if (GameManager.players[GameManager.currentPlayerIndex].moving && UserPlayer.MoveList.Contains(this)) {
+		if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].moving && UserPlayer.MoveList.Contains(this)) {
 			GameManager.instance.moveCurrentPlayer(this);
-		} else if (GameManager.players[GameManager.currentPlayerIndex].attacking && UserPlayer.AttackList.Contains(this)) {
+		} else if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].attacking && UserPlayer.AttackList.Contains(this)) {
 			GameManager.instance.attackWithCurrentPlayer(this);
 		}		
 		

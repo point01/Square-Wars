@@ -10,16 +10,25 @@ public class GameManager : MonoBehaviour {
 	public GameObject AIPlayerPrefab;
     public BaseUnitClass baseUnit = new BaseSoldierClass();
 
+    static public Team team1 = new Team();        
+    static public Team team2 = new Team();
+    static public bool gameOver;
+
+   
+
     static public int mapSize = 11;
 
     static public List<List<Tile>> map = new List<List<Tile>>();
-	static public List <Player> players = new List<Player>();
-    static public List<Player> team2 = new List<Player>();
+	//static public List <Player> players = new List<Player>();
+   // static public List<Player> enemyPlayers = new List<Player>();
 	static public int currentPlayerIndex = 0;
     static public Player CurrentTurnPlayer;
+
+    static public Team currentTeam;
+    static public Team enemyTeam;
 	
 	void Awake() {
-		instance = this;
+		instance = this;        
 	}
 	
 	// Use this for initialization
@@ -27,63 +36,111 @@ public class GameManager : MonoBehaviour {
 		generateMap();
 		generatePlayers();
         baseUnit = new BaseUnitClass();
-	}
+        gameOver = false;
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		
-		if (players[currentPlayerIndex].HP > 0) players[currentPlayerIndex].TurnUpdate();
-		else nextTurn();
+
+        if (!gameOver)
+        {
+            if (enemyTeam.myRoster.Exists(x => x.HP > 0))
+            {
+
+
+                if (currentTeam.myRoster[currentPlayerIndex].HP > 0)
+                {
+                    currentTeam.myRoster[currentPlayerIndex].TurnUpdate();
+                }
+                else nextTurn();
+            }
+            else
+            {
+                endGame();
+               // Time.timeScale = 0;
+            }
+        }
+        //if (Input.GetKeyDown("enter"))
+        //{
+        //    Application.LoadLevel(0);
+        //    gameOver = false;
+        //}
+            
+
 
 	}
 	
 	void OnGUI () {
-		if (players[currentPlayerIndex].HP > 0) players[currentPlayerIndex].TurnOnGUI();
+		if (currentTeam.myRoster[currentPlayerIndex].HP > 0) currentTeam.myRoster[currentPlayerIndex].TurnOnGUI();
 	}
 	
 	public void nextTurn() {
-        UserPlayerPrefab.GetComponent<UserPlayer>().StopEverything();
-		if (currentPlayerIndex + 1 < players.Count) {
-			currentPlayerIndex++;
-		} else {
-			currentPlayerIndex = 0;
-		}
-        CurrentTurnPlayer = players[currentPlayerIndex];
+        if (!gameOver)
+        {
+            Debug.Log(currentPlayerIndex.ToString());
+            UserPlayerPrefab.GetComponent<UserPlayer>().StopEverything();
+
+            //Are all the players done with their turn
+            if (currentPlayerIndex + 1 < currentTeam.myRoster.Count)
+            {
+                currentPlayerIndex++;
+                //Change teams and put counter at start of team
+            }
+            else
+            {
+                switch (currentTeam.teamName)
+                {
+                    case "Team1":
+                        currentTeam = team2;
+                        enemyTeam = team1;
+                        break;
+                    case "Team2":
+                        currentTeam = team1;
+                        enemyTeam = team2;
+                        break;
+                    default:
+                        break;
+                }
+                currentPlayerIndex = 0;
+            }
+            CurrentTurnPlayer = currentTeam.myRoster[currentPlayerIndex];
+        }
+
 	}
 	
 	public void moveCurrentPlayer(Tile destTile) {
-		players[currentPlayerIndex].gridPosition = destTile.gridPosition;
-        players[currentPlayerIndex].moveDestination = destTile.transform.position + 1.5f * Vector3.up;
-        players[currentPlayerIndex].moveQueue = Movement.CurrentMovementTree.GetMoveQueue(destTile);
+        currentTeam.myRoster[currentPlayerIndex].gridPosition = destTile.gridPosition;
+        currentTeam.myRoster[currentPlayerIndex].moveDestination = destTile.transform.position + 1.5f * Vector3.up;
+        currentTeam.myRoster[currentPlayerIndex].moveQueue = Movement.CurrentMovementTree.GetMoveQueue(destTile);
         UserPlayerPrefab.GetComponent<UserPlayer>().StopEverything();
 	}
 	
 	public void attackWithCurrentPlayer(Tile destTile) {
 		Player target = null;
-		foreach (Player p in players) {
+		foreach (Player p in enemyTeam.myRoster) {
 			if (p.gridPosition == destTile.gridPosition) {
 				target = p;
 			}
         }
 		
 		if (target != null) {
-			//Debug.Log ("p.x: " + players[currentPlayerIndex].gridPosition.x + ", p.y: " + players[currentPlayerIndex].gridPosition.y + " t.x: " + target.gridPosition.x + ", t.y: " + target.gridPosition.y);
 			if (UserPlayer.AttackList.Contains(destTile)) {
-				players[currentPlayerIndex].actionPoints--;
+                currentTeam.myRoster[currentPlayerIndex].actionPoints--;
 				
 				//attack logic
 				//roll to hit
-				bool hit = Random.Range(0.0f, 1.0f) <= players[currentPlayerIndex].attackChance;
+				bool hit = Random.Range(0.0f, 1.0f) <= currentTeam.myRoster[currentPlayerIndex].attackChance;
 				
 				if (hit) {
 					//damage logic
-					int amountOfDamage = (int)Mathf.Floor(players[currentPlayerIndex].damageBase + Random.Range(0, players[currentPlayerIndex].damageRollSides));
+					int amountOfDamage = (int)Mathf.Floor(currentTeam.myRoster[currentPlayerIndex].damageBase + Random.Range(0, currentTeam.myRoster[currentPlayerIndex].damageRollSides));
 					
 					target.HP -= amountOfDamage;
 					
-					Debug.Log(players[currentPlayerIndex].playerName + " successfuly hit " + target.playerName + " for " + amountOfDamage + " damage!");
+					Debug.Log(currentTeam.myRoster[currentPlayerIndex].playerName + " successfuly hit " + target.playerName + " for " + amountOfDamage + " damage!");
 				} else {
-					Debug.Log(players[currentPlayerIndex].playerName + " missed " + target.playerName + "!");
+					Debug.Log(currentTeam.myRoster[currentPlayerIndex].playerName + " missed " + target.playerName + "!");
 				}
 			} else {
 				Debug.Log ("Target is not in range!");
@@ -104,6 +161,14 @@ public class GameManager : MonoBehaviour {
 			map.Add(row);
 		}
 	}
+
+    //Called when one team has run out of playable players
+    void endGame()
+    {
+        gameOver = true;      
+
+    }
+
 	
     /*public void setClass(UserPlayer player, string c)
     {
@@ -121,32 +186,62 @@ public class GameManager : MonoBehaviour {
 	void generatePlayers() {
 		UserPlayer player;
         BaseUnitClass baseUnit = new BaseSoldierClass();
+        currentTeam = team1;
+        enemyTeam = team2;
+        team1.teamName = "Team1";
+        team2.teamName = "Team2";
+       
+
+		//player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(0 - Mathf.Floor(mapSize/2),1.5f, -0 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+		//player.gridPosition = new Vector2(0,0);
+  //      player.playerName = baseUnit.UnitClassName;
+  //      player.playerLore = baseUnit.UnitClassLore;
+  //      //setClass(player, "Soldier");
+  //      Debug.Log(player.playerLore);	
+
+		//team1.myRoster.Add(player);
 		
-		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(0 - Mathf.Floor(mapSize/2),1.5f, -0 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
-		player.gridPosition = new Vector2(0,0);
-        player.playerName = baseUnit.UnitClassName;
-        player.playerLore = baseUnit.UnitClassLore;
-        //setClass(player, "Soldier");
-        Debug.Log(player.playerLore);	
-		players.Add(player);
-		
-		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((mapSize-1) - Mathf.Floor(mapSize/2),1.5f, -(mapSize-1) + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
-		player.gridPosition = new Vector2(mapSize-1,mapSize-1);
-		player.playerName = "Kyle";
-        player.MovementTiles = 10;
-		
-		players.Add(player);
-				
-		player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2),1.5f, -4 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+		//player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((mapSize-1) - Mathf.Floor(mapSize/2),1.5f, -(mapSize-1) + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+		//player.gridPosition = new Vector2(mapSize-1,mapSize-1);
+		//player.playerName = "Kyle";
+  //      player.MovementTiles = 3;
+
+  //      team1.myRoster.Add(player);
+
+        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(4 - Mathf.Floor(mapSize/2),1.5f, -4 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
 		player.gridPosition = new Vector2(4,4);
 		player.playerName = "Lars";
         player.AttackRange = 3;
         player.MovementTiles = 1;
-		
-		players.Add(player);
-		
-		//AIPlayer aiplayer = ((GameObject)Instantiate(AIPlayerPrefab, new Vector3(6 - Mathf.Floor(mapSize/2),1.5f, -4 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<AIPlayer>();
-		
-		//players.Add(aiplayer);
-	}
+
+        team1.myRoster.Add(player);
+
+        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1 - Mathf.Floor(mapSize / 2), 1.5f, -1 + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+        player.gridPosition = new Vector2(1, 1);
+        player.playerName = "Steve";
+        player.AttackRange = 5;
+        player.MovementTiles = 3;
+
+        team2.myRoster.Add(player);
+
+        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(3 - Mathf.Floor(mapSize / 2), 1.5f, -3 + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+        player.gridPosition = new Vector2(3, 3);
+        player.playerName = "Sir William";
+        player.AttackRange = 2;
+        player.MovementTiles = 6;
+
+        team2.myRoster.Add(player);
+
+        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(5 - Mathf.Floor(mapSize / 2), 1.5f, -3 + Mathf.Floor(mapSize / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+        player.gridPosition = new Vector2(5, 3);
+        player.playerName = "Tyler";
+        player.AttackRange = 2;
+        player.MovementTiles = 6;
+
+        team2.myRoster.Add(player);
+
+        //AIPlayer aiplayer = ((GameObject)Instantiate(AIPlayerPrefab, new Vector3(6 - Mathf.Floor(mapSize/2),1.5f, -4 + Mathf.Floor(mapSize/2)), Quaternion.Euler(new Vector3()))).GetComponent<AIPlayer>();
+
+        //players.Add(aiplayer);
+    }
 }
