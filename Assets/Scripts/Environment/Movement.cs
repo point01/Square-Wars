@@ -6,6 +6,7 @@ public class Movement : MonoBehaviour
     // For Dijkstra's algorithm. Update it to a higher value if player movement bloats up too high
     private const int Infinity = 99999;
     public static TileTree CurrentMovementTree = new TileTree();
+    //holds movement tiles in a tree and can return all the tiles, or queues from the middle tile to other tiles
     public class TileTree
     {
         public List<TileTree> Nodes;
@@ -40,6 +41,7 @@ public class Movement : MonoBehaviour
             }
             return retval;
         }
+        //contains, but returns the actual tile, or null if it is not contained
         public TileTree ContainsT(Tile t)
         {
             if (t == Value)
@@ -66,6 +68,7 @@ public class Movement : MonoBehaviour
             }
             return retval;
         }
+        //queue of tiles from the middle tile to the specified one, or null if it is not contained within the tree
         public Queue<Tile> GetMoveQueue(Tile t)
         {
             TileTree owner = ContainsT(t);
@@ -101,6 +104,7 @@ public class Movement : MonoBehaviour
         //        retval = (int)Mathf.Sqrt(Mathf.Pow(t1.gridPosition.x - t2.gridPosition.x, 2) + Mathf.Pow(t1.gridPosition.y - t2.gridPosition.y, 2));
         return retval;
     }
+
     public static Tile GetTileFromPlayer(Player p)
     {
         return GameManager.map[(int)p.gridPosition.x][(int)p.gridPosition.y];
@@ -109,6 +113,7 @@ public class Movement : MonoBehaviour
     public static void GenerateMovementTree(Player mover)
     {
         System.Collections.Generic.List<Tile> all = new System.Collections.Generic.List<Tile>();
+        //optimization
         int mx = (int)mover.gridPosition.x;
         int my = (int)mover.gridPosition.y;
         int mxmin = mx - mover.MovementTiles;
@@ -129,17 +134,20 @@ public class Movement : MonoBehaviour
             for (int j = mymin; j <= mymax; ++j)
             {
                 if (GetDistance(temp, GameManager.map[i][j]) < mover.MovementTiles + 1)
-                    if (true) // replace this with a check to see if the mover can walk on map[i][j]
+                    if (true) //TODO replace this with a check to see if the mover can walk on map[i][j]
                         all.Add(GameManager.map[i][j]);
             }
         }
-        // This will need to be tweaked if we allow movement through allied units
-        foreach (Player p in GameManager.currentTeam.myRoster)
+        //TODO This will need to be tweaked if we allow movement through allied units
+        //if allied movement is desired, this foreach can be removed to allow it, but you'll need to manually remove player location tiles
+        // from the output of getmovement or they'll be able to walk into each other
+        //uncomment this to make it so that allied units block player movement
+        /*foreach (Player p in GameManager.currentTeam.myRoster)
         {
             temp = GetTileFromPlayer(p);
             if (all.Contains(temp))
                 all.Remove(temp);
-        }
+        }*/
         foreach (Player p in GameManager.enemyTeam.myRoster)
         {
             temp = GetTileFromPlayer(p);
@@ -167,11 +175,10 @@ public class Movement : MonoBehaviour
             int dist;
             foreach (Tile t in uvn)
             {
-                dist = t.MoveCost + weights[temp];
                 //set dist = Infinity if the tile isn't movable
+                dist = t.MoveCost + weights[temp];
                 if (dist < weights[t])
                 {
-                    //Debug.Log("setting " + t.gridPosition.ToString() + " from " + weights[t].ToString() + " to " + dist);
                     weights[t] = dist;
                     if (nextParent.ContainsKey(t))
                         nextParent[t] = temp;
@@ -204,10 +211,7 @@ public class Movement : MonoBehaviour
                 distancecheck.Dequeue();
         }
         while (Remove.Count > 0)
-            //{
-            //Debug.Log("removed " + Remove.Peek().gridPosition.ToString());
-            nextParent.Remove(Remove.Dequeue());
-        //}
+             nextParent.Remove(Remove.Dequeue());
         RecursiveBuildTileTree(nextParent, CurrentMovementTree);
     }
     private static void RecursiveBuildTileTree(Dictionary<Tile, Tile> nextParent, TileTree tree)
@@ -265,27 +269,29 @@ public class Movement : MonoBehaviour
         return retval;
     }
 
+
     public static System.Collections.Generic.List<Tile> GetMovement(Player mover)
     {
         List<Tile> retval;
         retval = CurrentMovementTree.ToList();
-        retval.Remove(GetTileFromPlayer(mover));
+        //retval.Remove(GetTileFromPlayer(mover));
+        //stops the player from moving where units already exist
+        Tile temp;
+        foreach (Player p in GameManager.currentTeam.myRoster)
+        {
+            temp = GetTileFromPlayer(p);
+            if (retval.Contains(temp))
+                retval.Remove(temp);
+        }
+        foreach (Player p in GameManager.enemyTeam.myRoster)
+        {
+            temp = GetTileFromPlayer(p);
+            if (retval.Contains(temp))
+                retval.Remove(temp);
+        }
         return retval;
-        /*     System.Collections.Generic.List<Tile> retval = new System.Collections.Generic.List<Tile>();
-             for (int i = 0; i < GameManager.mapSize; ++i)
-             {
-                 for (int j = 0; j < GameManager.mapSize; ++j)
-                 {
-                     if (GetDistance(GetTileFromPlayer(mover), GameManager.map[i][j]) < mover.MovementTiles + 1)
-                         retval.Add(GameManager.map[i][j]);
-                 }
-             }
-             foreach (Player p in GameManager.players)
-             {
-                 retval.Remove(GameManager.map[(int)p.gridPosition.x][(int)p.gridPosition.y]);
-             }
-             return retval;*/
     }
+
     public static System.Collections.Generic.List<Tile> GetAttack(Player mover)
     {
         System.Collections.Generic.List<Tile> retval = new System.Collections.Generic.List<Tile>();
@@ -299,10 +305,12 @@ public class Movement : MonoBehaviour
         }
         return retval;
     }
+
     public static System.Collections.Generic.Queue<Tile> GetMovementPath(Player mover, Tile destination)
     {
         return CurrentMovementTree.GetMoveQueue(destination);
     }
+
     public static void PaintTiles(System.Collections.Generic.List<Tile> movetiles, System.Collections.Generic.List<Tile> attacktiles)
     {
         if (movetiles != null)
@@ -313,28 +321,9 @@ public class Movement : MonoBehaviour
             foreach (Tile t in attacktiles)
                 if (movetiles == null || !movetiles.Contains(t))
                     t.transform.GetComponent<Renderer>().material.color = Color.red;
-
-        /*if (movetiles != null)
-        {
-            foreach (Tile t in movetiles)
-                t.transform.GetComponent<Renderer>().material.color = Color.blue;
-            if (attacktiles != null)
-                foreach (Tile t in attacktiles)
-                    if (!movetiles.Contains(t))
-                        t.transform.GetComponent<Renderer>().material.color = Color.red;
-        }
-        else
-        {
-            if (attacktiles != null)
-                foreach (Tile t in attacktiles)
-                    t.transform.GetComponent<Renderer>().material.color = Color.red;
-        }*/
     }
     public static void UnPaintTiles(System.Collections.Generic.List<Tile> tiles)
     {
-        /*        if (tiles != null)
-                    foreach (Tile t in tiles)
-                        t.transform.GetComponent<Renderer>().material.color = Color.white;*/
         for (int i = 0; i < GameManager.mapSize; ++i)
         {//this should probably be moved to game manager and have things like tile effects incorporated into it
             for (int j = 0; j < GameManager.mapSize; ++j)
@@ -344,23 +333,4 @@ public class Movement : MonoBehaviour
             }
         }
     }
-    /*
-    // example code for when a unit is right clicked/w/e to show movement/attack tiles
-    public static void Example(Player p)
-    {
-        System.Collections.Generic.List<Tile> Movement = GetMovement(p);
-        System.Collections.Generic.List<Tile> Attack = GetAttack(p);
-        PaintTiles(Movement, Attack);
-        MovableTiles = Movement;
-    }
-    private static System.Collections.Generic.List<Tile> MovableTiles;
-    // example for when the player clicks on a valid (blue) tile to move to
-    public static void Example2(Player p, Tile movetarget)
-    {
-        System.Collections.Generic.Queue<Tile> MoveQueue;
-        if (MovableTiles.Contains(movetarget))
-            MoveQueue = GetMovementPath(p, movetarget);
-         while (MoveQueue.Count > 0) // may need to do stuff to wait for coroutines to finish etc.
-           MovePlayerToTile(p, MoveQueue.Dequeue());
-    }*/
 }
