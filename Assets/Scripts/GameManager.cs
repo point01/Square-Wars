@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 	public static GameManager instance;
-	
-	public GameObject TilePrefab;
-	public GameObject UserPlayerPrefab;
-	public GameObject AIPlayerPrefab;
-    public BaseUnitClass baseUnit = new BaseSoldierClass();
+
+    static public GameObject TilePrefab;
+    static public GameObject UserPlayerPrefab;
+	static public GameObject AIPlayerPrefab;
+    static public BaseUnitClass baseUnit = new BaseSoldierClass();
 
     //Intstantiate Teams
     static public Team team1 = new Team();        
@@ -29,7 +29,10 @@ public class GameManager : MonoBehaviour {
     static public Team enemyTeam;
 	
 	void Awake() {
-		instance = this;        
+		instance = this;
+        TilePrefab = Resources.Load<GameObject>("Prefabs/Tile");
+        UserPlayerPrefab = Resources.Load<GameObject>("Prefabs/UserPlayer");
+        AIPlayerPrefab = Resources.Load<GameObject>("Prefabs/AIPlayer");        
 	}
 	
 	// Use this for initialization
@@ -57,8 +60,6 @@ public class GameManager : MonoBehaviour {
             //Check enemy roster
             if (enemyTeam.myRoster.Exists(x => x.HP > 0))
             {
-
-
                 if (currentTeam.myRoster[currentPlayerIndex].HP > 0)
                 {
                     currentTeam.myRoster[currentPlayerIndex].TurnUpdate();
