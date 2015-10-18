@@ -16,17 +16,18 @@ public class Player : MonoBehaviour {
 	public bool attacking = false;
     public bool isAlive = false;
 
-    public string playerName = "George";
-    public string playerLore = "Default";
-	public int HP = 25;
-    public int MovementTiles = 3;
+    public string playerName;
+    public string playerLore;
+    public int playerAGI;
+    public int HP;
+    public int MovementTiles;
     public int MovementJump = 0;
-    public int AttackRange = 1;
+    public int AttackRange;
 	
 
-	public float attackChance = 0.75f;
-	public float defenseReduction = 0.15f;
-	public int damageBase = 5;
+	public float attackChance = 1;
+	public int defenseReduction;
+	public int damageBase;
 	public float damageRollSides = 6; //d6
     
 	
@@ -72,11 +73,60 @@ public class Player : MonoBehaviour {
             player.defenseReduction = bu.UnitClassDEF;
             player.MovementTiles = bu.UnitClassSPD;
             player.AttackRange = 1;
-            //player.playerAGI = bu.UnitClassAGI;
+            player.playerAGI = bu.UnitClassAGI;
 
         }
         else
             Debug.Log("Do Nothing");
+    }
+
+    /**************************************************************************************************************************
+     * This method currently handles general unit combat. If the attacking unit has higher AGI, it'll attack first. Otherwise
+     * the defending unit will attack first. 
+     *
+     * @attacker The attacking unit. Can be either the User's unit or the Enemy (other user or AI).
+     * @defender The unit that didn't start the attack. Can be either the User's unit or the Enemy (other user or AI).
+     *
+     *************************************************************************************************************************/
+    public void unitCombat(Player attacker, Player defender)
+    {
+        //The damage the attacking unit will give
+        int attackerDamage = attackDamage(attacker, defender);
+        //The damage the defending unit will give
+        int defenderDamage = attackDamage(defender, attacker);
+
+        //If attacking unit has more AGI, it'll attack first
+        if(attacker.playerAGI >= defender.playerAGI)
+        {
+            Debug.Log("" + attacker.playerName + " attacked first!");
+            defender.HP = defender.HP - attackerDamage;
+            Debug.Log("" + attacker.playerName + " attacked " + defender.playerName + " for " + attackerDamage + " damage!");
+            attacker.HP = attacker.HP - defenderDamage;
+            Debug.Log("" + defender.playerName + " attacked " + attacker.playerName + " for " + defenderDamage + " damage!");
+        }
+        //If defending unit (non-attacking unit) has higher AGI, it will attack first
+        else
+        {
+            Debug.Log("" + defender.playerName + " attacked first!");
+            attacker.HP = attacker.HP - defenderDamage;
+            Debug.Log("" + defender.playerName + " attacked " + attacker.playerName + " for " + defenderDamage + " damage!");
+            defender.HP = defender.HP - attackerDamage;
+            Debug.Log("" + attacker.playerName + " attacked " + defender.playerName + " for " + attackerDamage + " damage!");
+        }
+    }
+
+    /**************************************************************************************************************************
+     * This method calculates the damage of a potential attack. Can be used for unitCombat method, the UI, and the log.
+     *
+     * @attacker The attacking unit. Can be either the User's unit or the Enemy (other user or AI).
+     * @defender The unit that didn't start the attack. Can be either the User's unit or the Enemy (other user or AI).
+     *
+     *************************************************************************************************************************/
+    //Once environment tiles and abilities are done, this will be more complex
+    public int attackDamage(Player attacker, Player defender)
+    {
+        int damage = attacker.damageBase - defender.defenseReduction;
+        return damage;
     }
 
     public virtual void TurnOnGUI () {

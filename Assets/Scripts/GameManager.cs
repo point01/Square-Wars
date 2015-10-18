@@ -130,6 +130,7 @@ public class GameManager : MonoBehaviour {
 	
 	public void attackWithCurrentPlayer(Tile destTile) {
 		Player target = null;
+        Player currentPlayer = currentTeam.myRoster[currentPlayerIndex];
 		foreach (Player p in enemyTeam.myRoster) {
 			if (p.gridPosition == destTile.gridPosition) {
 				target = p;
@@ -138,22 +139,9 @@ public class GameManager : MonoBehaviour {
 		
 		if (target != null) {
 			if (UserPlayer.AttackList.Contains(destTile)) {
-                currentTeam.myRoster[currentPlayerIndex].actionPoints--;
-				
-				//attack logic
-				//roll to hit
-				bool hit = Random.Range(0.0f, 1.0f) <= currentTeam.myRoster[currentPlayerIndex].attackChance;
-				
-				if (hit) {
-					//damage logic
-					int amountOfDamage = (int)Mathf.Floor(currentTeam.myRoster[currentPlayerIndex].damageBase + Random.Range(0, currentTeam.myRoster[currentPlayerIndex].damageRollSides));
-					
-					target.HP -= amountOfDamage;
-					
-					Debug.Log(currentTeam.myRoster[currentPlayerIndex].playerName + " successfuly hit " + target.playerName + " for " + amountOfDamage + " damage!");
-				} else {
-					Debug.Log(currentTeam.myRoster[currentPlayerIndex].playerName + " missed " + target.playerName + "!");
-				}
+                currentPlayer.actionPoints--;
+                currentPlayer.unitCombat(currentPlayer, target);
+                
 			} else {
 				Debug.Log ("Target is not in range!");
 			}
