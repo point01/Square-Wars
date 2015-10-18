@@ -4,31 +4,73 @@ using System.Collections;
 
 public class Tile : MonoBehaviour
 {
-
+    public GameObject gameobj;
     public Vector2 gridPosition = Vector2.zero;
     public EnvironmentType envType;
     public Player containedUnit;
     public bool isAccessible;
     public int MoveCost = 1;
     public int elevation;
-    public Color tileColor = Color.white;
+    public Color tileColor;
 
     // Use this for initialization
     void Start()
     {
-        transform.GetComponent<Renderer>().material.color = tileColor;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
     public EnvironmentType EnvType
     {
         get { return envType; }
         set { envType = value; }
+    }
+
+    public void setEnvironment (string env)
+    {
+        switch (env)
+        {
+            case "barrier":
+                envType = EnvironmentType.Barrier;
+                tileColor = new Color(42f / 255f, 42f / 255f, 42f / 255f, 1f);
+                isAccessible = false;
+                break;
+            case "stone":
+                envType = EnvironmentType.Plains;
+                tileColor = new Color(195f / 255f, 5f / 255f, 55f / 255f, 1f);
+                isAccessible = true;
+                break;
+            case "grass":
+                envType = EnvironmentType.Grass;
+                tileColor = new Color(144f / 255f, 219f / 255f, 31f / 255f, 1.0f);
+                isAccessible = true;
+                break;
+            case "plains":
+                envType = EnvironmentType.Plains;
+                tileColor = new Color(210f / 255f, 170f / 255f, 40f / 255f, 1f);
+                isAccessible = true;
+                break;
+            case "tallgrass":
+                envType = EnvironmentType.TallGrass;
+                tileColor = new Color(27f / 255f, 183 / 255f, 21 / 255f, 1f);
+                isAccessible = true;
+                break;
+            case "swamp":
+                envType = EnvironmentType.Swamp;
+                tileColor = new Color(52f / 255f, 125f / 255f, 13f / 255f, 1f);
+                isAccessible = true;
+                break;
+            case "forest":
+                envType = EnvironmentType.Forest;
+                tileColor = new Color(122f / 255f, 86f / 255f, 54f / 255f, 1f);
+                isAccessible = true;
+                break;
+        }
     }
 
     void OnMouseEnter()

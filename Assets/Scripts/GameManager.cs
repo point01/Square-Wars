@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -5,18 +7,26 @@ using System.Collections.Generic;
 public class GameManager : MonoBehaviour {
 	public static GameManager instance;
 
-    static public GameObject TilePrefab;
     static public GameObject UserPlayerPrefab;
 	static public GameObject AIPlayerPrefab;
     static public BaseUnitClass baseUnit = new BaseSoldierClass();
 
-    //Intstantiate Teams
+    // Teams
     static public Team team1 = new Team();        
     static public Team team2 = new Team();
     static public bool gameOver;
 
-   
+    // Environment blocks
+    static public GameObject TilePrefab;
+    static public GameObject TilePrefab_e0;
+    static public GameObject TilePrefab_e1;
+    static public GameObject TilePrefab_e2;
 
+    //The x and y dimensions of map loaded
+    public int mapXDim;
+    public int mapYDim;
+
+    //old
     static public int mapSize = 11;
 
     static public List<List<Tile>> map = new List<List<Tile>>();
@@ -30,22 +40,20 @@ public class GameManager : MonoBehaviour {
 	
 	void Awake() {
 		instance = this;
+
+        // Initialize prefabs
         TilePrefab = Resources.Load<GameObject>("Prefabs/Tile");
+        TilePrefab_e0 = Resources.Load<GameObject>("Prefabs/Tile_e0");
+        TilePrefab_e1 = Resources.Load<GameObject>("Prefabs/Tile_e1");
+        TilePrefab_e2 = Resources.Load<GameObject>("Prefabs/Tile_e2");
         UserPlayerPrefab = Resources.Load<GameObject>("Prefabs/UserPlayer");
         AIPlayerPrefab = Resources.Load<GameObject>("Prefabs/AIPlayer");        
 	}
 	
 	// Use this for initialization
 	void Start () {
-
-        
-        TilePrefab.AddComponent<GrassTile>();
-        //TilePrefab.AddComponent<Transform>();
-        TilePrefab.AddComponent<OnRightClick>();
-        
-
-        generateMap();
-		generatePlayers();
+        generateMapFromFile("example1");
+        generatePlayers();
         baseUnit = new BaseUnitClass();
         //Instantiate gameover
         gameOver = false;
@@ -149,6 +157,83 @@ public class GameManager : MonoBehaviour {
         UserPlayerPrefab.GetComponent<UserPlayer>().StopEverything();
     }
 
+    void generateMapFromFile(string name)
+    {
+        FileReader fr = new FileReader();
+        string[] mapArr = fr.textAssetToStrArray(name);
+
+        map = new List<List<Tile>>();
+        GameObject tilePrefab;
+
+        int xCoord = 0;
+        mapXDim = mapArr.Length;
+
+        foreach (string line in mapArr) // for each column
+        {
+            // The finished product we're building
+            List<Tile> column = new List<Tile>();
+
+            // The bits of the file we're building from
+            string[] tileStrArr = line.Split(new string[] { ";" }, StringSplitOptions.None);
+
+            int yCoord = 0;
+            mapYDim = tileStrArr.Length;
+
+            foreach (string tileStr in tileStrArr)
+            {
+                string[] attributes = tileStr.Split(new string[] { "," }, StringSplitOptions.None);
+
+                string env = attributes[0];                 //Get string representation of tile type
+                int height = Int32.Parse(attributes[1]);    //get int representation of tile height
+
+                Vector3 position = new Vector3(xCoord - Mathf.Floor(mapXDim / 2), (height / 4.0f), -yCoord + Mathf.Floor(mapYDim / 2));
+                Quaternion rotation = Quaternion.Euler(new Vector3());
+
+                switch (height)     // Set height
+                {
+                    case 1:
+                        tilePrefab = TilePrefab_e0;
+                        break;
+                    case 2:
+                        tilePrefab = TilePrefab_e1;
+                        break;
+                    case 3:
+                        tilePrefab = TilePrefab_e2;
+                        break;
+                    default:
+                        tilePrefab = TilePrefab_e0;
+                        break;
+                }
+
+                Tile tile = ((GameObject)Instantiate(tilePrefab, position, rotation)).GetComponent<Tile>();
+
+                switch (env)        // Create block based on height, type
+                {
+                    case "barrier":
+                        tile.setEnvironment("barrier");
+                        break;
+                    case "stone":
+                        tile.setEnvironment("stone");
+                        break;
+                    case "grass":
+                        tile.setEnvironment("grass");
+                        break;
+                    case "plains":
+                        tile.setEnvironment("plains");
+                        break;
+                    case "forest":
+                        tile.setEnvironment("forest");
+                        break;
+                }
+                tile.gridPosition = new Vector2(xCoord, yCoord);    // Add tile's own position on grid to the tile
+                column.Add(tile);                                   // Add tile to the column
+                yCoord += 1;                                        // Increment yCoord for next run
+            }
+            map.Add(column);    //Add column to map
+            xCoord += 1;        //Increment xCoord for next run
+        }
+    }
+
     void generateMap()
     {
         map = new List<List<Tile>>();
@@ -165,11 +250,6 @@ public class GameManager : MonoBehaviour {
                 Quaternion rotation = Quaternion.Euler(new Vector3());
 
                 Tile tile = ((GameObject)Instantiate(TilePrefab, position, rotation)).GetComponent<GrassTile>();
-
-                if (tile == null)
-                {
-                    Debug.Log("WHARRGARBL");
-                }
 
                 // Add tile's own position on grid to the tile
                 tile.gridPosition = new Vector2(i, j);

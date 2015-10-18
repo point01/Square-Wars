@@ -6,6 +6,7 @@ public enum EnvironmentType
     Plains,
     Grass,
     TallGrass,
+    Forest,
     Swamp,
     Stone,
     Barrier
