@@ -101,8 +101,11 @@ public class Player : MonoBehaviour {
             Debug.Log("" + attacker.playerName + " attacked first!");
             defender.HP = defender.HP - attackerDamage;
             Debug.Log("" + attacker.playerName + " attacked " + defender.playerName + " for " + attackerDamage + " damage!");
-            attacker.HP = attacker.HP - defenderDamage;
-            Debug.Log("" + defender.playerName + " attacked " + attacker.playerName + " for " + defenderDamage + " damage!");
+            if(defender.HP > 0)
+            {
+                attacker.HP = attacker.HP - defenderDamage;
+                Debug.Log("" + defender.playerName + " attacked " + attacker.playerName + " for " + defenderDamage + " damage!");
+            }
         }
         //If defending unit (non-attacking unit) has higher AGI, it will attack first
         else
@@ -110,8 +113,11 @@ public class Player : MonoBehaviour {
             Debug.Log("" + defender.playerName + " attacked first!");
             attacker.HP = attacker.HP - defenderDamage;
             Debug.Log("" + defender.playerName + " attacked " + attacker.playerName + " for " + defenderDamage + " damage!");
-            defender.HP = defender.HP - attackerDamage;
-            Debug.Log("" + attacker.playerName + " attacked " + defender.playerName + " for " + attackerDamage + " damage!");
+            if (attacker.HP > 0)
+            {
+                defender.HP = defender.HP - attackerDamage;
+                Debug.Log("" + attacker.playerName + " attacked " + defender.playerName + " for " + attackerDamage + " damage!");
+            } 
         }
     }
 
