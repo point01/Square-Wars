@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class Movement : MonoBehaviour
 {
+    private static System.Random RMove = new System.Random();
+
     // For Dijkstra's algorithm. Update it to a higher value if player movement bloats up too high
     private const int Infinity = 99999;
     public static TileTree CurrentMovementTree = new TileTree();
@@ -122,12 +124,12 @@ public class Movement : MonoBehaviour
         int mymax = my + mover.MovementTiles;
         if (mxmin < 0)
             mxmin = 0;
-        if (mxmax >= GameManager.mapSize)
-            mxmax = GameManager.mapSize - 1;
+        if (mxmax >= GameManager.MapWidth)
+            mxmax = GameManager.MapWidth - 1;
         if (mymin < 0)
             mymin = 0;
-        if (mymax >= GameManager.mapSize)
-            mymax = GameManager.mapSize - 1;
+        if (mymax >= GameManager.MapHeight)
+            mymax = GameManager.MapHeight - 1;
         Tile temp = GetTileFromPlayer(mover);
         for (int i = mxmin; i <= mxmax; ++i)
         {
@@ -175,8 +177,13 @@ public class Movement : MonoBehaviour
             int dist;
             foreach (Tile t in uvn)
             {
-                //set dist = Infinity if the tile isn't movable
-                dist = t.MoveCost + weights[temp];
+                float jdist = t.elevation - temp.elevation;
+                if (jdist < 0)
+                    jdist *= -1;
+                if (t.isAccessible && jdist <= mover.MovementJump)
+                    dist = t.MoveCost + weights[temp];
+                else
+                    dist = Infinity;
                 if (dist < weights[t])
                 {
                     weights[t] = dist;
@@ -211,7 +218,7 @@ public class Movement : MonoBehaviour
                 distancecheck.Dequeue();
         }
         while (Remove.Count > 0)
-             nextParent.Remove(Remove.Dequeue());
+            nextParent.Remove(Remove.Dequeue());
         RecursiveBuildTileTree(nextParent, CurrentMovementTree);
     }
     private static void RecursiveBuildTileTree(Dictionary<Tile, Tile> nextParent, TileTree tree)
@@ -256,14 +263,14 @@ public class Movement : MonoBehaviour
             retval.Add(GameManager.map[nx][ny]);
         nx = x + 1;
         ny = y;
-        if (nx >= GameManager.mapSize)
-            nx = GameManager.mapSize - 1;
+        if (nx >= GameManager.MapWidth)
+            nx = GameManager.MapWidth - 1;
         if (u.Contains(GameManager.map[nx][ny]))
             retval.Add(GameManager.map[nx][ny]);
         nx = x;
         ny = y + 1;
-        if (ny >= GameManager.mapSize)
-            ny = GameManager.mapSize - 1;
+        if (ny >= GameManager.MapHeight)
+            ny = GameManager.MapHeight - 1;
         if (u.Contains(GameManager.map[nx][ny]))
             retval.Add(GameManager.map[nx][ny]);
         return retval;
@@ -295,9 +302,9 @@ public class Movement : MonoBehaviour
     public static System.Collections.Generic.List<Tile> GetAttack(Player mover)
     {
         System.Collections.Generic.List<Tile> retval = new System.Collections.Generic.List<Tile>();
-        for (int i = 0; i < GameManager.mapSize; ++i)
+        for (int i = 0; i < GameManager.MapWidth; ++i)
         {
-            for (int j = 0; j < GameManager.mapSize; ++j)
+            for (int j = 0; j < GameManager.MapHeight; ++j)
             {
                 if (GetDistance(GetTileFromPlayer(mover), GameManager.map[i][j]) < mover.AttackRange + 1)
                     retval.Add(GameManager.map[i][j]);
@@ -324,9 +331,9 @@ public class Movement : MonoBehaviour
     }
     public static void UnPaintTiles(System.Collections.Generic.List<Tile> tiles)
     {
-        for (int i = 0; i < GameManager.mapSize; ++i)
+        for (int i = 0; i < GameManager.MapWidth; ++i)
         {//this should probably be moved to game manager and have things like tile effects incorporated into it
-            for (int j = 0; j < GameManager.mapSize; ++j)
+            for (int j = 0; j < GameManager.MapHeight; ++j)
             {
                 Tile targetTile = GameManager.map[i][j];
                 targetTile.transform.GetComponent<Renderer>().material.color = targetTile.tileColor;
