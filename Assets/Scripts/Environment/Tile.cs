@@ -10,7 +10,7 @@ public class Tile : MonoBehaviour
     public Player containedUnit;
     public bool isAccessible;
     public int MoveCost = 1;
-    public int elevation;
+    public float elevation { get { return transform.position.y; } set { transform.position.Set(transform.position.x, value, transform.position.z); } }
     public Color tileColor;
 
     // Use this for initialization
