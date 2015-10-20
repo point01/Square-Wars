@@ -7,6 +7,5 @@ This game is being developed as a capstone project for CIS 467.
 #### Check the [Wiki page](https://github.com/SpylerMcCarThief/chesseract/wiki) for documentation and journals
 #### Check the [Trello page](https://trello.com/b/6nIQNK1d/main) to track development progress
 
-#### Attn. Dr. Adams: 
 ##### [Feasibility Report](https://docs.google.com/document/d/1_bgDCjhfMrPDKB1yQ9b6JkNd2dLFT0kXREPeH9mzDPc)
 #####[Sprint 1 report](https://docs.google.com/document/d/1hVokgYoqMpwGDgCQJZG_CuS6j3kLLSZWTvUFGbuWQ1k/edit)
