@@ -3,63 +3,69 @@ using System.Collections;
 using System.Collections.Generic;
 
 //Parts/all of this should probably be combined with BaseUnitClass
-public class Player : MonoBehaviour {
-	
-	public Vector2 gridPosition = Vector2.zero;
+public class Player : MonoBehaviour
+{
+
+    // do not change
+    public Vector2 gridPosition
+    {
+        get { return new Vector2(transform.position.x, transform.position.z); }
+        set { transform.position.Set(value.x, transform.position.y, value.y); }
+    }
+
     public BaseUnitClass unit = new BaseUnitClass();
-	public Vector3 moveDestination;
+    public Vector3 moveDestination;
     public Tile DestinationTile;
-	public float moveSpeed;
+    public float moveSpeed;
     public System.Collections.Generic.Queue<Tile> moveQueue;
-	
-	public bool moving = false;
-	public bool attacking = false;
-    public bool isAlive = false;
+
+    public bool moving = false;
+    public bool attacking = false;
+    public bool isAlive
+    {
+        get { return HP > 0; }
+        set
+        {
+            if (!value) HP = 0;
+            if (value && HP < 1) HP = 1;
+        }
+    }
 
     public string playerName;
     public string playerLore;
     public int playerAGI;
     public int HP;
     public int MovementTiles;
-    public int MovementJump = 0;
+    public float MovementJump = 0.5f;
     public int AttackRange;
-	
 
-	public float attackChance = 1;
-	public int defenseReduction;
-	public int damageBase;
-	public float damageRollSides = 6; //d6
-    
-	
-	public int actionPoints = 2;
+    public float attackChance = 1;
+    public int defenseReduction;
+    public int damageBase;
+    public float damageRollSides = 6; //d6
+
+    public int actionPoints = 2;
 
     //List of stats
     List<string> tempList = new List<string>();
-	
-	void Awake () {
-		moveDestination = transform.position;
-	}
-	
-	// Use this for initialization
-	void Start () {
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
-       
+    void Awake()
+    {
+        moveDestination = transform.position;
     }
-	
-	public virtual void TurnUpdate () {
 
-		if (actionPoints <= 0) {
-			actionPoints = 2;
-			moving = false;
-			attacking = false;			
-			GameManager.instance.nextTurn();
-		}
+    public virtual void TurnUpdate()
+    {
+
+        if (actionPoints <= 0)
+        {
+            actionPoints = 2;
+            moving = false;
+            attacking = false;
+            GameManager.instance.nextTurn();
+        }
         updateStatus();
-	}
+    }
 
     public void setStats(UserPlayer player, string unitClass)
     {
@@ -96,12 +102,12 @@ public class Player : MonoBehaviour {
         int defenderDamage = attackDamage(defender, attacker);
 
         //If attacking unit has more AGI, it'll attack first
-        if(attacker.playerAGI >= defender.playerAGI)
+        if (attacker.playerAGI >= defender.playerAGI)
         {
             Debug.Log("" + attacker.playerName + " attacked first!");
             defender.HP = defender.HP - attackerDamage;
             Debug.Log("" + attacker.playerName + " attacked " + defender.playerName + " for " + attackerDamage + " damage!");
-            if(defender.HP > 0)
+            if (defender.HP > 0)
             {
                 attacker.HP = attacker.HP - defenderDamage;
                 Debug.Log("" + defender.playerName + " attacked " + attacker.playerName + " for " + defenderDamage + " damage!");
@@ -117,7 +123,7 @@ public class Player : MonoBehaviour {
             {
                 defender.HP = defender.HP - attackerDamage;
                 Debug.Log("" + attacker.playerName + " attacked " + defender.playerName + " for " + attackerDamage + " damage!");
-            } 
+            }
         }
     }
 
@@ -135,11 +141,12 @@ public class Player : MonoBehaviour {
         return damage;
     }
 
-    public virtual void TurnOnGUI () {
-		
-	}
+    public virtual void TurnOnGUI()
+    {
 
-    
+    }
+
+
 
     //Where the UI will be updated. 
     void updateStatus()

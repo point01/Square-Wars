@@ -24,7 +24,7 @@ public class AIPlayer : Player {
 				actionPoints--;
 			}
 		} else {
-			moveDestination = new Vector3(0 - Mathf.Floor(GameManager.mapSize/2),1.5f, -0 + Mathf.Floor(GameManager.mapSize/2));
+			moveDestination = new Vector3(0 - Mathf.Floor(GameManager.MapWidth/2),1.5f, -0 + Mathf.Floor(GameManager.MapHeight/2));
 		}
 		
 		base.TurnUpdate ();
