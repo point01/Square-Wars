@@ -10,6 +10,8 @@ public class BaseUnitClass {
     private int unitClassHP;
     private int unitClassSTR;
     private int unitClassDEF;
+    private int unitClassMAG;
+    private int unitClassMDF;
     private int unitClassSPD;
     private int unitClassAGI;
 
@@ -36,6 +38,16 @@ public class BaseUnitClass {
     public int UnitClassDEF
     {
         get { return unitClassDEF; }
+        set { unitClassDEF = value; }
+    }
+    public int UnitClassMAG
+    {
+        get { return unitClassMAG; }
+        set { unitClassSTR = value; }
+    }
+    public int UnitClassMDF
+    {
+        get { return unitClassMDF; }
         set { unitClassDEF = value; }
     }
     public int UnitClassSPD
