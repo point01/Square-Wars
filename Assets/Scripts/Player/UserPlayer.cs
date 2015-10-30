@@ -79,7 +79,7 @@ public class UserPlayer : Player
 
     public override void TurnOnGUI()
     {
-        if (!GameManager.gameOver)
+        if (!GameManager.gameOver && !GameManager.freezeGame)
         {
             float buttonHeight = 50;
             float buttonWidth = 150;

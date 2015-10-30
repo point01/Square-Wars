@@ -154,7 +154,7 @@ public class Player : MonoBehaviour
         //Clears old UI
         tempList.Clear();
         //Add all stats that want to be displayed
-        tempList.Add("Name: " + playerName);
+        tempList.Add(playerName + "\n");
         tempList.Add("HP: " + HP.ToString());
         tempList.Add("Atk Dmg: " + damageBase.ToString());
         tempList.Add("AP: " + actionPoints.ToString());

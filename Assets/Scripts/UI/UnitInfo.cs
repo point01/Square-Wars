@@ -11,11 +11,7 @@ public class UnitInfo : MonoBehaviour {
 	void Start () {
 
         //Set up the reference
-        infoDisplayed = GetComponent<Text>();
-
-        //Instantiate holders
-        unitInfo.Add("Name:");
-        unitInfo.Add("Health:");        
+        infoDisplayed = GetComponent<Text>();     
     }
 	
 	// Update is called once per frame
