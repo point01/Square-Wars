@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     static public Team team1 = new Team();
     static public Team team2 = new Team();
     static public bool gameOver;
+    static public bool freezeGame;
 
     // Environment blocks
     static public GameObject TilePrefab;
@@ -28,8 +29,6 @@ public class GameManager : MonoBehaviour
     static public int MapHeight;
 
     static public List<List<Tile>> map = new List<List<Tile>>();
-    //static public List <Player> players = new List<Player>();
-    // static public List<Player> enemyPlayers = new List<Player>();
     static public int currentPlayerIndex = 0;
     static public Player CurrentTurnPlayer;
 
@@ -58,13 +57,14 @@ public class GameManager : MonoBehaviour
         //Instantiate gameover
         Movement.UnPaintTiles(null);
         gameOver = false;
+        freezeGame = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         //If not gameOver
-        if (!gameOver)
+        if (!gameOver || !freezeGame)
         {
             //Check enemy roster
             if (enemyTeam.myRoster.Exists(x => x.HP > 0))
@@ -78,7 +78,6 @@ public class GameManager : MonoBehaviour
             else
             {
                 endGame();
-                // Time.timeScale = 0;
             }
         }
     }
@@ -91,7 +90,7 @@ public class GameManager : MonoBehaviour
     public void nextTurn()
     {
         //Check if game going
-        if (!gameOver)
+        if (!gameOver || !freezeGame)
         {
            // Debug.Log(currentPlayerIndex.ToString());
             UserPlayerPrefab.GetComponent<UserPlayer>().StopEverything();
@@ -241,6 +240,7 @@ public class GameManager : MonoBehaviour
     void endGame()
     {
         gameOver = true;
+        freezeGame = true;
 
     }
 

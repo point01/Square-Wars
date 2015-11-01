@@ -16,7 +16,7 @@ public class GameOverUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.gameOver == true)
+        if (GameManager.gameOver == true && GameManager.freezeGame == true)
         {
             textDisplayed.text = "Game Over!\n" + GameManager.currentTeam.teamName + " Wins!";
         }
