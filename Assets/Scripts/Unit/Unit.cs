@@ -23,25 +23,28 @@ public class Player : MonoBehaviour
     public bool attacking = false;
     public bool isAlive
     {
-        get { return HP > 0; }
+        get { return unitHP > 0; }
         set
         {
-            if (!value) HP = 0;
-            if (value && HP < 1) HP = 1;
+            if (!value) unitHP = 0;
+            if (value && unitHP < 1) unitHP = 1;
         }
     }
 
-    public string playerName;
-    public string playerLore;
-    public int playerAGI;
-    public int HP;
+    public string unitName;
+    public string unitType;
+    public string unitLore;
+    public int unitAGI;
+    public int unitHP;
     public int MovementTiles;
     public float MovementJump = 0.5f;
     public int AttackRange;
 
     public float attackChance = 1;
-    public int defenseReduction;
-    public int damageBase;
+    public int unitSTR;
+    public int unitDEF;
+    public int unitMAG;
+    public int unitMDF;
     public float damageRollSides = 6; //d6
 
     public int actionPoints = 2;
@@ -69,21 +72,71 @@ public class Player : MonoBehaviour
 
     public void setStats(UserPlayer player, string unitClass)
     {
+        BaseUnitClass bu;
+
         if (unitClass.Equals("Soldier"))
         {
-            BaseUnitClass bu = new BaseSoldierClass();
-            player.playerName = bu.UnitClassName;
-            player.playerLore = bu.UnitClassLore;
-            player.HP = bu.UnitClassHP;
-            player.damageBase = bu.UnitClassSTR;
-            player.defenseReduction = bu.UnitClassDEF;
+            bu = new BaseSoldierClass();
+            player.unitName = bu.UnitClassName;
+            player.unitType = bu.UnitClassType;
+            player.unitLore = bu.UnitClassLore;
+            player.unitHP = bu.UnitClassHP;
+            player.unitSTR = bu.UnitClassSTR;
+            player.unitDEF = bu.UnitClassDEF;
+            player.unitMAG = bu.UnitClassMAG;
+            player.unitMDF = bu.UnitClassMDF;
             player.MovementTiles = bu.UnitClassSPD;
             player.AttackRange = 1;
-            player.playerAGI = bu.UnitClassAGI;
-
+            player.unitAGI = bu.UnitClassAGI;
         }
-        else
-            Debug.Log("Do Nothing");
+
+        if (unitClass.Equals("Knight"))
+        {
+            bu = new BaseKnightClass();
+            player.unitName = bu.UnitClassName;
+            player.unitType = bu.UnitClassType;
+            player.unitLore = bu.UnitClassLore;
+            player.unitHP = bu.UnitClassHP;
+            player.unitSTR = bu.UnitClassSTR;
+            player.unitDEF = bu.UnitClassDEF;
+            player.unitMAG = bu.UnitClassMAG;
+            player.unitMDF = bu.UnitClassMDF;
+            player.MovementTiles = bu.UnitClassSPD;
+            player.AttackRange = 1;
+            player.unitAGI = bu.UnitClassAGI;
+        }
+
+        if (unitClass.Equals("Mage"))
+        {
+            bu = new BaseMageClass();
+            player.unitName = bu.UnitClassName;
+            player.unitType = bu.UnitClassType;
+            player.unitLore = bu.UnitClassLore;
+            player.unitHP = bu.UnitClassHP;
+            player.unitSTR = bu.UnitClassSTR;
+            player.unitDEF = bu.UnitClassDEF;
+            player.unitMAG = bu.UnitClassMAG;
+            player.unitMDF = bu.UnitClassMDF;
+            player.MovementTiles = bu.UnitClassSPD;
+            player.AttackRange = 2;
+            player.unitAGI = bu.UnitClassAGI;
+        }
+
+        if (unitClass.Equals("Cavalier"))
+        {
+            bu = new BaseCavalierClass();
+            player.unitName = bu.UnitClassName;
+            player.unitType = bu.UnitClassType;
+            player.unitLore = bu.UnitClassLore;
+            player.unitHP = bu.UnitClassHP;
+            player.unitSTR = bu.UnitClassSTR;
+            player.unitDEF = bu.UnitClassDEF;
+            player.unitMAG = bu.UnitClassMAG;
+            player.unitMDF = bu.UnitClassMDF;
+            player.MovementTiles = bu.UnitClassSPD;
+            player.AttackRange = 2;
+            player.unitAGI = bu.UnitClassAGI;
+        }
     }
 
     /**************************************************************************************************************************
@@ -102,27 +155,27 @@ public class Player : MonoBehaviour
         int defenderDamage = attackDamage(defender, attacker);
 
         //If attacking unit has more AGI, it'll attack first
-        if (attacker.playerAGI >= defender.playerAGI)
+        if (attacker.unitAGI >= defender.unitAGI)
         {
-            Debug.Log("" + attacker.playerName + " attacked first!");
-            defender.HP = defender.HP - attackerDamage;
-            Debug.Log("" + attacker.playerName + " attacked " + defender.playerName + " for " + attackerDamage + " damage!");
-            if (defender.HP > 0)
+            Debug.Log("" + attacker.unitName + " attacked first!");
+            defender.unitHP = defender.unitHP - attackerDamage;
+            Debug.Log("" + attacker.unitName + " attacked " + defender.unitName + " for " + attackerDamage + " damage!");
+            if (defender.unitHP > 0)
             {
-                attacker.HP = attacker.HP - defenderDamage;
-                Debug.Log("" + defender.playerName + " attacked " + attacker.playerName + " for " + defenderDamage + " damage!");
+                attacker.unitHP = attacker.unitHP - defenderDamage;
+                Debug.Log("" + defender.unitName + " attacked " + attacker.unitName + " for " + defenderDamage + " damage!");
             }
         }
         //If defending unit (non-attacking unit) has higher AGI, it will attack first
         else
         {
-            Debug.Log("" + defender.playerName + " attacked first!");
-            attacker.HP = attacker.HP - defenderDamage;
-            Debug.Log("" + defender.playerName + " attacked " + attacker.playerName + " for " + defenderDamage + " damage!");
-            if (attacker.HP > 0)
+            Debug.Log("" + defender.unitName + " attacked first!");
+            attacker.unitHP = attacker.unitHP - defenderDamage;
+            Debug.Log("" + defender.unitName + " attacked " + attacker.unitName + " for " + defenderDamage + " damage!");
+            if (attacker.unitHP > 0)
             {
-                defender.HP = defender.HP - attackerDamage;
-                Debug.Log("" + attacker.playerName + " attacked " + defender.playerName + " for " + attackerDamage + " damage!");
+                defender.unitHP = defender.unitHP - attackerDamage;
+                Debug.Log("" + attacker.unitName + " attacked " + defender.unitName + " for " + attackerDamage + " damage!");
             }
         }
     }
@@ -137,7 +190,18 @@ public class Player : MonoBehaviour
     //Once environment tiles and abilities are done, this will be more complex
     public int attackDamage(Player attacker, Player defender)
     {
-        int damage = attacker.damageBase - defender.defenseReduction;
+        int damage;
+
+        if (attacker.unitType.Equals("Mage"))
+        {
+            damage = attacker.unitMAG - defender.unitMDF;
+        }
+
+        else
+        {
+            damage = attacker.unitSTR - defender.unitDEF;
+        }
+
         return damage;
     }
 
@@ -154,11 +218,14 @@ public class Player : MonoBehaviour
         //Clears old UI
         tempList.Clear();
         //Add all stats that want to be displayed
-        tempList.Add(playerName + "\n");
-        tempList.Add("HP: " + HP.ToString());
-        tempList.Add("Atk Dmg: " + damageBase.ToString());
+        tempList.Add("Name: " + unitName);
+        tempList.Add("Type: " + unitType);
+        tempList.Add("HP: " + unitHP.ToString());
+        tempList.Add("Atk Dmg: " + unitSTR.ToString());
+        tempList.Add("Def: " + unitDEF.ToString());
+        tempList.Add("Magic Dmg: " + unitMAG.ToString());
+        tempList.Add("Mag Def: " + unitMDF.ToString());
         tempList.Add("AP: " + actionPoints.ToString());
-        tempList.Add("Def Red: " + defenseReduction.ToString());
 
         //Update UI static variable
         UnitInfo.unitInfo = tempList;

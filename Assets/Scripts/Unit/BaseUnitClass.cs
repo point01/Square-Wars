@@ -5,6 +5,7 @@ public class BaseUnitClass {
 
     //Description
     private string unitClassName;
+    private string unitClassType;
     private string unitClassLore;
     //STATS
     private int unitClassHP;
@@ -19,6 +20,11 @@ public class BaseUnitClass {
     {
         get { return unitClassName; }
         set { unitClassName = value; }
+    }
+    public string UnitClassType
+    {
+        get { return unitClassType; }
+        set { unitClassType = value; }
     }
     public string UnitClassLore
     {
@@ -43,12 +49,12 @@ public class BaseUnitClass {
     public int UnitClassMAG
     {
         get { return unitClassMAG; }
-        set { unitClassSTR = value; }
+        set { unitClassMAG = value; }
     }
     public int UnitClassMDF
     {
         get { return unitClassMDF; }
-        set { unitClassDEF = value; }
+        set { unitClassMDF = value; }
     }
     public int UnitClassSPD
     {

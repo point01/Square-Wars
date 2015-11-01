@@ -6,6 +6,7 @@ public class BaseSoldierClass : BaseUnitClass{
     public BaseSoldierClass()
     {
         UnitClassName = "Soldier";
+        UnitClassType = "Soldier";
         UnitClassLore = "Pawn";
         UnitClassHP = 5;
         UnitClassSTR = 5;
