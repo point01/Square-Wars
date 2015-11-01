@@ -244,19 +244,6 @@ public class GameManager : MonoBehaviour
 
     }
 
-    /*public void setClass(UserPlayer player, string c)
-    {
-        if (c.Equals("Soldier")){
-            BaseUnitClass bu = new BaseSoldierClass();
-            player.playerName = bu.UnitClassName;
-            player.playerLore = bu.UnitClassLore;
-        }
-        else
-        {
-            Debug.Log("Nothing");
-        }
-    }*/
-
     void generatePlayers()
     {
         UserPlayer player;
