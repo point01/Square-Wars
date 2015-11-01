@@ -67,9 +67,9 @@ public class GameManager : MonoBehaviour
         if (!gameOver || !freezeGame)
         {
             //Check enemy roster
-            if (enemyTeam.myRoster.Exists(x => x.HP > 0))
+            if (enemyTeam.myRoster.Exists(x => x.unitHP > 0))
             {
-                if (currentTeam.myRoster[currentPlayerIndex].HP > 0)
+                if (currentTeam.myRoster[currentPlayerIndex].unitHP > 0)
                 {
                     currentTeam.myRoster[currentPlayerIndex].TurnUpdate();
                 }
@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
 
     void OnGUI()
     {
-        if (currentTeam.myRoster[currentPlayerIndex].HP > 0) currentTeam.myRoster[currentPlayerIndex].TurnOnGUI();
+        if (currentTeam.myRoster[currentPlayerIndex].unitHP > 0) currentTeam.myRoster[currentPlayerIndex].TurnOnGUI();
     }
 
     public void nextTurn()
@@ -256,8 +256,7 @@ public class GameManager : MonoBehaviour
 
         player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1, 1.5f, (MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
         player.gridPosition = new Vector2(1, (MapHeight / 2));
-        player.playerName = baseUnit.UnitClassName;
-        player.playerLore = baseUnit.UnitClassLore;
+        //player.unitName = baseUnit.UnitClassName;
         player.setStats(player, "Soldier");
         player.MovementJump = 0.5f;
         //      Debug.Log(player.playerLore);	
@@ -266,19 +265,19 @@ public class GameManager : MonoBehaviour
 
         player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1, 1.5f, (MapHeight / 2 - 1)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
         player.gridPosition = new Vector2(1, (MapHeight / 2 - 1));
-        player.setStats(player, "Soldier");
-        player.playerName = "Kyle";
-        player.MovementTiles = 3;
+        player.setStats(player, "Mage");
+        player.unitName = "Kyle";
+        //player.MovementTiles = 3;
         player.MovementJump = 0.5f;
 
         team1.myRoster.Add(player);
 
         player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1, 1.5f, (MapHeight / 2 + 1)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
         player.gridPosition = new Vector2(1, (MapHeight / 2 + 1));
-        player.setStats(player, "Soldier");
-        player.playerName = "Lars";
-        player.AttackRange = 3;
-        player.MovementTiles = 1;
+        player.setStats(player, "Cavalier");
+        player.unitName = "Lars";
+        //player.AttackRange = 3;
+        //player.MovementTiles = 1;
         player.MovementJump = 0.5f;
 
         team1.myRoster.Add(player);
@@ -286,7 +285,7 @@ public class GameManager : MonoBehaviour
         player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((MapWidth - 1), 1.5f, -1 + Mathf.Floor(MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
         player.gridPosition = new Vector2(MapHeight - 1, 1);
         player.setStats(player, "Soldier");
-        player.playerName = "Steve";
+        player.unitName = "Steve";
         player.AttackRange = 5;
         player.MovementTiles = 3;
         player.MovementJump = 0.5f;
@@ -295,21 +294,21 @@ public class GameManager : MonoBehaviour
 
         player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((MapWidth - 1), 1.5f, -2 + Mathf.Floor(MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
         player.gridPosition = new Vector2(MapHeight - 1, 2);
-        player.setStats(player, "Soldier");
-        player.playerName = "Sir William";
-        player.AttackRange = 2;
-        player.MovementTiles = 6;
+        player.setStats(player, "Knight");
+        player.unitName = "Sir William";
+        //player.AttackRange = 2;
+        //player.MovementTiles = 6;
         player.MovementJump = 0.0f;// too lazy to jump...
 
         team2.myRoster.Add(player);
 
         player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((MapWidth - 1), 1.5f, -3 + Mathf.Floor(MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
         player.gridPosition = new Vector2(MapHeight - 1, 3);
-        player.setStats(player, "Soldier");
-        player.playerName = "Tyler";
-        player.AttackRange = 2;
-        player.MovementTiles = 6;
-        player.MovementJump = 0.25f;
+        player.setStats(player, "Cavalier");
+        player.unitName = "Tyler";
+       // player.AttackRange = 2;
+       // player.MovementTiles = 6;
+        player.MovementJump = 0.5f;
 
         team2.myRoster.Add(player);
     }

@@ -7,6 +7,7 @@ public class BaseMageClass : BaseUnitClass
     public BaseMageClass()
     {
         UnitClassName = "Mage";
+        UnitClassType = "Mage";
         UnitClassLore = "Wizardry";
         UnitClassHP = 5;
         UnitClassSTR = 0;

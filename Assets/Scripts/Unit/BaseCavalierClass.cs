@@ -7,6 +7,7 @@ public class BaseCavalierClass : BaseUnitClass
     public BaseCavalierClass()
     {
         UnitClassName = "Cavalier";
+        UnitClassType = "Cavalier";
         UnitClassLore = "Horse";
         UnitClassHP = 6;
         UnitClassSTR = 5;
