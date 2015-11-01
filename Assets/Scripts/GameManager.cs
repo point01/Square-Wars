@@ -237,32 +237,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void generateMap()
-    {
-        map = new List<List<Tile>>();
-        for (int i = 0; i < MapWidth; i++)
-        {
-
-            // Create one row of tiles
-            List<Tile> row = new List<Tile>();
-
-            for (int j = 0; j < MapHeight; j++)
-            {
-
-                Vector3 position = new Vector3(i - Mathf.Floor(MapWidth / 2), 0, -j + Mathf.Floor(MapHeight / 2));
-                Quaternion rotation = Quaternion.Euler(new Vector3());
-
-                Tile tile = ((GameObject)Instantiate(TilePrefab, position, rotation)).GetComponent<GrassTile>();
-
-                // Add tile's own position on grid to the tile
-                tile.gridPosition = new Vector2(i, j);
-
-                row.Add(tile);
-            }
-            map.Add(row);
-        }
-    }
-
     //Called when one team has run out of playable players
     void endGame()
     {
