@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BaseCavalierClass : BaseUnitClass
+public class ModelCavalier : ModelUnit
 {
 
-    public BaseCavalierClass()
+    public ModelCavalier()
     {
         UnitClassName = "Cavalier";
+        UnitClassType = "Cavalier";
         UnitClassLore = "Horse";
         UnitClassHP = 6;
         UnitClassSTR = 5;

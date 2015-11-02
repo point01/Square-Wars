@@ -107,12 +107,12 @@ public class Movement : MonoBehaviour
         return retval;
     }
 
-    public static Tile GetTileFromPlayer(Player p)
+    public static Tile GetTileFromPlayer(UnitActions p)
     {
         return GameManager.map[(int)p.gridPosition.x][(int)p.gridPosition.y];
     }
     // CALL THIS EVERY TIME A UNIT GETS A NEW TURN
-    public static void GenerateMovementTree(Player mover)
+    public static void GenerateMovementTree(UnitActions mover)
     {
         System.Collections.Generic.List<Tile> all = new System.Collections.Generic.List<Tile>();
         //optimization
@@ -150,7 +150,7 @@ public class Movement : MonoBehaviour
             if (all.Contains(temp))
                 all.Remove(temp);
         }*/
-        foreach (Player p in GameManager.enemyTeam.myRoster)
+        foreach (UnitActions p in GameManager.enemyTeam.myRoster)
         {
             temp = GetTileFromPlayer(p);
             if (all.Contains(temp))
@@ -277,20 +277,20 @@ public class Movement : MonoBehaviour
     }
 
 
-    public static System.Collections.Generic.List<Tile> GetMovement(Player mover)
+    public static System.Collections.Generic.List<Tile> GetMovement(UnitActions mover)
     {
         List<Tile> retval;
         retval = CurrentMovementTree.ToList();
         //retval.Remove(GetTileFromPlayer(mover));
         //stops the player from moving where units already exist
         Tile temp;
-        foreach (Player p in GameManager.currentTeam.myRoster)
+        foreach (UnitActions p in GameManager.currentTeam.myRoster)
         {
             temp = GetTileFromPlayer(p);
             if (retval.Contains(temp))
                 retval.Remove(temp);
         }
-        foreach (Player p in GameManager.enemyTeam.myRoster)
+        foreach (UnitActions p in GameManager.enemyTeam.myRoster)
         {
             temp = GetTileFromPlayer(p);
             if (retval.Contains(temp))
@@ -299,7 +299,7 @@ public class Movement : MonoBehaviour
         return retval;
     }
 
-    public static System.Collections.Generic.List<Tile> GetAttack(Player mover)
+    public static System.Collections.Generic.List<Tile> GetAttack(UnitActions mover)
     {
         System.Collections.Generic.List<Tile> retval = new System.Collections.Generic.List<Tile>();
         for (int i = 0; i < GameManager.MapWidth; ++i)
@@ -313,7 +313,7 @@ public class Movement : MonoBehaviour
         return retval;
     }
 
-    public static System.Collections.Generic.Queue<Tile> GetMovementPath(Player mover, Tile destination)
+    public static System.Collections.Generic.Queue<Tile> GetMovementPath(UnitActions mover, Tile destination)
     {
         return CurrentMovementTree.GetMoveQueue(destination);
     }

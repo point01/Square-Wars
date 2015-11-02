@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BaseKnightClass : BaseUnitClass
+public class ModelKnight: ModelUnit
 {
 
-    public BaseKnightClass()
+    public ModelKnight()
     {
+        UnitClassName = "Knight";
         UnitClassName = "Knight";
         UnitClassLore = "Rook";
         UnitClassHP = 8;

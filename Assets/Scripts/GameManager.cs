@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
 
     static public GameObject UserPlayerPrefab;
     static public GameObject AIPlayerPrefab;
-    static public BaseUnitClass baseUnit = new BaseSoldierClass();
 
     // Teams
     static public Team team1 = new Team();
@@ -30,7 +29,7 @@ public class GameManager : MonoBehaviour
 
     static public List<List<Tile>> map = new List<List<Tile>>();
     static public int currentPlayerIndex = 0;
-    static public Player CurrentTurnPlayer;
+    static public UnitActions CurrentTurnPlayer;
 
     static public Team currentTeam;
     static public Team enemyTeam;
@@ -53,7 +52,7 @@ public class GameManager : MonoBehaviour
     {
         generateMapFromFile("example1");
         generatePlayers();
-        baseUnit = new BaseUnitClass();
+
         //Instantiate gameover
         Movement.UnPaintTiles(null);
         gameOver = false;
@@ -67,9 +66,9 @@ public class GameManager : MonoBehaviour
         if (!gameOver || !freezeGame)
         {
             //Check enemy roster
-            if (enemyTeam.myRoster.Exists(x => x.HP > 0))
+            if (enemyTeam.myRoster.Exists(x => x.unitHP > 0))
             {
-                if (currentTeam.myRoster[currentPlayerIndex].HP > 0)
+                if (currentTeam.myRoster[currentPlayerIndex].unitHP > 0)
                 {
                     currentTeam.myRoster[currentPlayerIndex].TurnUpdate();
                 }
@@ -84,7 +83,7 @@ public class GameManager : MonoBehaviour
 
     void OnGUI()
     {
-        if (currentTeam.myRoster[currentPlayerIndex].HP > 0) currentTeam.myRoster[currentPlayerIndex].TurnOnGUI();
+        if (currentTeam.myRoster[currentPlayerIndex].unitHP > 0) currentTeam.myRoster[currentPlayerIndex].TurnOnGUI();
     }
 
     public void nextTurn()
@@ -93,7 +92,7 @@ public class GameManager : MonoBehaviour
         if (!gameOver || !freezeGame)
         {
            // Debug.Log(currentPlayerIndex.ToString());
-            UserPlayerPrefab.GetComponent<UserPlayer>().StopEverything();
+            UserPlayerPrefab.GetComponent<UnitActionsPlayer>().StopEverything();
 
             //Are all the players done with their turn
             if (currentPlayerIndex + 1 < currentTeam.myRoster.Count)
@@ -128,14 +127,14 @@ public class GameManager : MonoBehaviour
         currentTeam.myRoster[currentPlayerIndex].gridPosition = destTile.gridPosition;
         currentTeam.myRoster[currentPlayerIndex].moveDestination = destTile.transform.position + 1.5f * Vector3.up;
         currentTeam.myRoster[currentPlayerIndex].moveQueue = Movement.CurrentMovementTree.GetMoveQueue(destTile);
-        UserPlayerPrefab.GetComponent<UserPlayer>().StopEverything();
+        UserPlayerPrefab.GetComponent<UnitActionsPlayer>().StopEverything();
     }
 
     public void attackWithCurrentPlayer(Tile destTile)
     {
-        Player target = null;
-        Player currentPlayer = currentTeam.myRoster[currentPlayerIndex];
-        foreach (Player p in enemyTeam.myRoster)
+        UnitActions target = null;
+        UnitActions currentPlayer = currentTeam.myRoster[currentPlayerIndex];
+        foreach (UnitActions p in enemyTeam.myRoster)
         {
             if (p.gridPosition == destTile.gridPosition)
             {
@@ -145,7 +144,7 @@ public class GameManager : MonoBehaviour
 
         if (target != null)
         {
-            if (UserPlayer.AttackList.Contains(destTile))
+            if (UnitActionsPlayer.AttackList.Contains(destTile))
             {
                 currentPlayer.actionPoints--;
                 currentPlayer.unitCombat(currentPlayer, target);
@@ -156,7 +155,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Target is not in range!");
             }
         }
-        UserPlayerPrefab.GetComponent<UserPlayer>().StopEverything();
+        UserPlayerPrefab.GetComponent<UnitActionsPlayer>().StopEverything();
     }
 
     void generateMapFromFile(string name)
@@ -246,70 +245,79 @@ public class GameManager : MonoBehaviour
 
     void generatePlayers()
     {
-        UserPlayer player;
-        BaseUnitClass baseUnit = new BaseSoldierClass();
+        UnitActionsPlayer player;
+        ModelUnit baseUnit = new ModelSoldier();
         currentTeam = team1;
         enemyTeam = team2;
         team1.teamName = "Team1";
         team2.teamName = "Team2";
 
+        // TODO
+        // The following code can be adapted into a "create unit" method
+        // Which can then be adapted into future versions that include
+        // team creation mode. Also keeps us from repeating ourselves too much
+        // Pass in a position and unit type as a parameter, then add to roster
+        // GeneratePlayers then, for now, would be simply six calls to this function.
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1, 1.5f, (MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+        Vector3 position = new Vector3(1, 1.5f, (MapHeight / 2));
+        Quaternion rotation = Quaternion.Euler(new Vector3());
+
+        player = ((GameObject)Instantiate(UserPlayerPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
         player.gridPosition = new Vector2(1, (MapHeight / 2));
-        player.playerName = baseUnit.UnitClassName;
-        player.playerLore = baseUnit.UnitClassLore;
+
         player.setStats(player, "Soldier");
         player.MovementJump = 0.5f;
-        //      Debug.Log(player.playerLore);	
 
         team1.myRoster.Add(player);
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1, 1.5f, (MapHeight / 2 - 1)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+        // end snippet
+
+        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1, 1.5f, (MapHeight / 2 - 1)), Quaternion.Euler(new Vector3()))).GetComponent<UnitActionsPlayer>();
         player.gridPosition = new Vector2(1, (MapHeight / 2 - 1));
-        player.setStats(player, "Soldier");
-        player.playerName = "Kyle";
-        player.MovementTiles = 3;
+        player.setStats(player, "Mage");
+        player.unitName = "Kyle";
+        //player.MovementTiles = 3;
         player.MovementJump = 0.5f;
 
         team1.myRoster.Add(player);
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1, 1.5f, (MapHeight / 2 + 1)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1, 1.5f, (MapHeight / 2 + 1)), Quaternion.Euler(new Vector3()))).GetComponent<UnitActionsPlayer>();
         player.gridPosition = new Vector2(1, (MapHeight / 2 + 1));
-        player.setStats(player, "Soldier");
-        player.playerName = "Lars";
-        player.AttackRange = 3;
-        player.MovementTiles = 1;
+        player.setStats(player, "Cavalier");
+        player.unitName = "Lars";
+        //player.AttackRange = 3;
+        //player.MovementTiles = 1;
         player.MovementJump = 0.5f;
 
         team1.myRoster.Add(player);
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((MapWidth - 1), 1.5f, -1 + Mathf.Floor(MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((MapWidth - 1), 1.5f, -1 + Mathf.Floor(MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UnitActionsPlayer>();
         player.gridPosition = new Vector2(MapHeight - 1, 1);
         player.setStats(player, "Soldier");
-        player.playerName = "Steve";
+        player.unitName = "Steve";
         player.AttackRange = 5;
         player.MovementTiles = 3;
         player.MovementJump = 0.5f;
 
         team2.myRoster.Add(player);
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((MapWidth - 1), 1.5f, -2 + Mathf.Floor(MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((MapWidth - 1), 1.5f, -2 + Mathf.Floor(MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UnitActionsPlayer>();
         player.gridPosition = new Vector2(MapHeight - 1, 2);
-        player.setStats(player, "Soldier");
-        player.playerName = "Sir William";
-        player.AttackRange = 2;
-        player.MovementTiles = 6;
+        player.setStats(player, "Knight");
+        player.unitName = "Sir William";
+        //player.AttackRange = 2;
+        //player.MovementTiles = 6;
         player.MovementJump = 0.0f;// too lazy to jump...
 
         team2.myRoster.Add(player);
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((MapWidth - 1), 1.5f, -3 + Mathf.Floor(MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UserPlayer>();
+        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((MapWidth - 1), 1.5f, -3 + Mathf.Floor(MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UnitActionsPlayer>();
         player.gridPosition = new Vector2(MapHeight - 1, 3);
-        player.setStats(player, "Soldier");
-        player.playerName = "Tyler";
-        player.AttackRange = 2;
-        player.MovementTiles = 6;
-        player.MovementJump = 0.25f;
+        player.setStats(player, "Cavalier");
+        player.unitName = "Tyler";
+       // player.AttackRange = 2;
+       // player.MovementTiles = 6;
+        player.MovementJump = 0.5f;
 
         team2.myRoster.Add(player);
     }

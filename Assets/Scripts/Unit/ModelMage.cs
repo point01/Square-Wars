@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BaseMageClass : BaseUnitClass
+public class ModelMage : ModelUnit
 {
 
-    public BaseMageClass()
+    public ModelMage()
     {
         UnitClassName = "Mage";
+        UnitClassType = "Mage";
         UnitClassLore = "Wizardry";
         UnitClassHP = 5;
         UnitClassSTR = 0;

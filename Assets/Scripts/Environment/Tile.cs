@@ -7,7 +7,7 @@ public class Tile : MonoBehaviour
     public GameObject gameobj;
     public Vector2 gridPosition = Vector2.zero;
     public EnvironmentType envType;
-    public Player containedUnit;
+    public UnitActions containedUnit;
     public bool isAccessible;
     public int MoveCost = 1;
     public float elevation { get { return transform.position.y; } set { transform.position.Set(transform.position.x, value, transform.position.z); } }
@@ -93,9 +93,9 @@ public class Tile : MonoBehaviour
 	
 	
 	void OnMouseDown() {
-		if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].moving && UserPlayer.MoveList.Contains(this)) {
+		if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].moving && UnitActionsPlayer.MoveList.Contains(this)) {
 			GameManager.instance.moveCurrentPlayer(this);
-		} else if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].attacking && UserPlayer.AttackList.Contains(this)) {
+		} else if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].attacking && UnitActionsPlayer.AttackList.Contains(this)) {
 			GameManager.instance.attackWithCurrentPlayer(this);
 		}		
 		

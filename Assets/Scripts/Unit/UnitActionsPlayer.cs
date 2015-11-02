@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class UserPlayer : Player
+public class UnitActionsPlayer : UnitActions
 {
 
     // Use this for initialization
@@ -30,7 +30,7 @@ public class UserPlayer : Player
             
         }
 
-        if (HP <= 0)
+        if (unitHP <= 0)
         {
             transform.rotation = Quaternion.Euler(new Vector3(90, 0, 0));
             transform.GetComponent<Renderer>().material.color = Color.red;

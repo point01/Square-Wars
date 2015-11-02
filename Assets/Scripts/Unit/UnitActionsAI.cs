@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class AIPlayer : Player {
+public class UnitActionsAI : UnitActions {
 
 	// Use this for initialization
 	void Start () {
