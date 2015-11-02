@@ -7,6 +7,10 @@ public class ClickDragCam : MonoBehaviour
 
     void Update()
     {
+		if (Input.GetAxis("Mouse ScrollWheel") != 0.0f){
+			transform.Translate(new Vector3(0.0f, 0.0f, Input.GetAxis("Mouse ScrollWheel")));
+		}
+
         if (Input.GetMouseButtonDown(1))
         {
             dragOrigin = Input.mousePosition;
