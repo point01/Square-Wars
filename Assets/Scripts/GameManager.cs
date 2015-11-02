@@ -264,7 +264,6 @@ public class GameManager : MonoBehaviour
 
         player = ((GameObject)Instantiate(UserPlayerPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
         player.gridPosition = new Vector2(1, (MapHeight / 2));
-
         player.setStats(player, "Soldier");
         player.MovementJump = 0.5f;
 
