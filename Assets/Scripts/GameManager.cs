@@ -23,6 +23,10 @@ public class GameManager : MonoBehaviour
     static public GameObject TilePrefab_e1;
     static public GameObject TilePrefab_e2;
 
+	// block decorations
+	static public GameObject decoBush;
+	static public GameObject decoTree;
+
     //The x and y dimensions of map loaded
     static public int MapWidth;
     static public int MapHeight;
@@ -45,7 +49,10 @@ public class GameManager : MonoBehaviour
         TilePrefab_e2 = Resources.Load<GameObject>("Prefabs/Tile_e2");
         UserPlayerPrefab = Resources.Load<GameObject>("Prefabs/UserPlayer");
         AIPlayerPrefab = Resources.Load<GameObject>("Prefabs/AIPlayer");
-    }
+
+		// Tile decorations
+		decoBush = Resources.Load<GameObject>("TerrainAssets/Bushes/Bush1");
+	}
 
     // Use this for initialization
     void Start()
@@ -206,7 +213,8 @@ public class GameManager : MonoBehaviour
                         break;
                 }
 
-                Tile tile = ((GameObject)Instantiate(tilePrefab, position, rotation)).GetComponent<Tile>();
+				GameObject block = Instantiate(tilePrefab, position, rotation) as GameObject;
+                Tile tile = block.GetComponent<Tile>();
 
                 switch (env)        // Create block based on height, type
                 {
@@ -218,7 +226,8 @@ public class GameManager : MonoBehaviour
                         break;
                     case "grass":
                         tile.setEnvironment("grass");
-                        break;
+						GameObject bsh = Instantiate(decoBush, position, rotation) as GameObject;
+						break;
                     case "plains":
                         tile.setEnvironment("plains");
                         break;

@@ -8,7 +8,7 @@ public class MouseOrbitImproved : MonoBehaviour
 
     public Transform target;
     public float distance = 5.0f;
-    public float xSpeed = 0.1f;
+    public float xSpeed = 120.0f;
     public float ySpeed = 120.0f;
 
     public float yMinLimit = -20f;
@@ -36,6 +36,9 @@ public class MouseOrbitImproved : MonoBehaviour
         {
             rigidBod.freezeRotation = true;
         }
+
+		// Set target
+		target = GameObject.Find("CameraCenter").transform;
     }
 
     void LateUpdate()
