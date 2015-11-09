@@ -34,6 +34,7 @@ public class UnitActions : MonoBehaviour
     public string unitName;
     public string unitType;
     public string unitLore;
+    public string unitStatus;
     public int unitAGI;
     public int unitHP;
     public int MovementTiles;
@@ -88,6 +89,7 @@ public class UnitActions : MonoBehaviour
             player.MovementTiles = bu.UnitClassSPD;
             player.AttackRange = 1;
             player.unitAGI = bu.UnitClassAGI;
+            player.unitStatus = "Normal";
         }
 
         if (unitClass.Equals("Knight"))
@@ -104,6 +106,7 @@ public class UnitActions : MonoBehaviour
             player.MovementTiles = bu.UnitClassSPD;
             player.AttackRange = 1;
             player.unitAGI = bu.UnitClassAGI;
+            player.unitStatus = "Normal";
         }
 
         if (unitClass.Equals("Mage"))
@@ -120,6 +123,7 @@ public class UnitActions : MonoBehaviour
             player.MovementTiles = bu.UnitClassSPD;
             player.AttackRange = 2;
             player.unitAGI = bu.UnitClassAGI;
+            player.unitStatus = "Normal";
         }
 
         if (unitClass.Equals("Cavalier"))
@@ -136,6 +140,7 @@ public class UnitActions : MonoBehaviour
             player.MovementTiles = bu.UnitClassSPD;
             player.AttackRange = 2;
             player.unitAGI = bu.UnitClassAGI;
+            player.unitStatus = "Normal";
         }
     }
 
@@ -205,6 +210,11 @@ public class UnitActions : MonoBehaviour
         return damage;
     }
 
+    public void setUnitStatus()
+    {
+        //this will have the proper status changes one day
+    }
+
     public virtual void TurnOnGUI()
     {
 
@@ -220,6 +230,7 @@ public class UnitActions : MonoBehaviour
         //Add all stats that want to be displayed
         tempList.Add("Name: " + unitName);
         tempList.Add("Type: " + unitType);
+        tempList.Add("Status: " + unitStatus);
         tempList.Add("HP: " + unitHP.ToString());
         tempList.Add("Atk Dmg: " + unitSTR.ToString());
         tempList.Add("Def: " + unitDEF.ToString());

@@ -8,6 +8,7 @@ public class Tile : MonoBehaviour
     public Vector2 gridPosition = Vector2.zero;
     public EnvironmentType envType;
     public UnitActions containedUnit;
+    public string tileStatus;
     public bool isAccessible;
     public int MoveCost = 1;
     public float elevation { get { return transform.position.y; } set { transform.position.Set(transform.position.x, value, transform.position.z); } }
@@ -44,31 +45,37 @@ public class Tile : MonoBehaviour
                 envType = EnvironmentType.Plains;
                 tileColor = new Color(195f / 255f, 5f / 255f, 55f / 255f, 1f);
                 isAccessible = true;
+                tileStatus = "Stoned #420";
                 break;
             case "grass":
                 envType = EnvironmentType.Grass;
                 tileColor = new Color(144f / 255f, 219f / 255f, 31f / 255f, 1.0f);
                 isAccessible = true;
+                tileStatus = "Normal";
                 break;
             case "plains":
                 envType = EnvironmentType.Plains;
                 tileColor = new Color(210f / 255f, 170f / 255f, 40f / 255f, 1f);
                 isAccessible = true;
+                tileStatus = "Normal";
                 break;
             case "tallgrass":
                 envType = EnvironmentType.TallGrass;
                 tileColor = new Color(27f / 255f, 183 / 255f, 21 / 255f, 1f);
                 isAccessible = true;
+                tileStatus = "tallgrass";
                 break;
             case "swamp":
                 envType = EnvironmentType.Swamp;
                 tileColor = new Color(52f / 255f, 125f / 255f, 13f / 255f, 1f);
                 isAccessible = true;
+                tileStatus = "Poison";
                 break;
             case "forest":
                 envType = EnvironmentType.Forest;
                 tileColor = new Color(122f / 255f, 86f / 255f, 54f / 255f, 1f);
                 isAccessible = true;
+                tileStatus = "Normal";
                 break;
         }
     }
@@ -95,9 +102,11 @@ public class Tile : MonoBehaviour
 	void OnMouseDown() {
 		if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].moving && UnitActionsPlayer.MoveList.Contains(this)) {
 			GameManager.instance.moveCurrentPlayer(this);
-		} else if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].attacking && UnitActionsPlayer.AttackList.Contains(this)) {
+            GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].unitStatus = tileStatus;
+            GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].setUnitStatus();
+        } else if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].attacking && UnitActionsPlayer.AttackList.Contains(this)) {
 			GameManager.instance.attackWithCurrentPlayer(this);
-		}		
+        }		
 		
 	}
 
