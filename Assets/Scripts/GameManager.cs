@@ -23,13 +23,17 @@ public class GameManager : MonoBehaviour
     static public GameObject TilePrefab_e1;
     static public GameObject TilePrefab_e2;
 
-	// block decorations
-	static public GameObject decoBush;
+    // Decorations
+    static public GameObject groundPlane;
+    static public GameObject decoBush;
 	static public GameObject decoTree;
 
     //The x and y dimensions of map loaded
     static public int MapWidth;
     static public int MapHeight;
+    static public float mapcenterX;
+    static public float mapcenterY;
+    static public Vector3 mapCenter;
 
     static public List<List<Tile>> map = new List<List<Tile>>();
     static public int currentPlayerIndex = 0;
@@ -50,14 +54,20 @@ public class GameManager : MonoBehaviour
         UserPlayerPrefab = Resources.Load<GameObject>("Prefabs/UserPlayer");
         AIPlayerPrefab = Resources.Load<GameObject>("Prefabs/AIPlayer");
 
-		// Tile decorations
+		// Decorations
 		decoBush = Resources.Load<GameObject>("TerrainAssets/Bushes/Bush1");
-	}
+        groundPlane = Resources.Load<GameObject>("Prefabs/groundPlane");
+    }
 
     // Use this for initialization
     void Start()
     {
-        generateMapFromFile("example1");
+        // Load map and set related decorations
+        generateMapFromFile("Maps/example1");
+
+        //Place units on board
+        //This will later include a call to manual unit placement function
+        //once it is made
         generatePlayers();
 
         //Instantiate gameover
@@ -242,6 +252,20 @@ public class GameManager : MonoBehaviour
             map.Add(column);    //Add column to map
             xCoord += 1;        //Increment xCoord for next run
         }
+
+        // Initialize center holder values
+        mapcenterX = MapWidth / 2;
+        mapcenterY = MapHeight / 2;
+        mapCenter = new Vector3(mapcenterX, 0.0f, mapcenterY);
+        groundPlane.transform.position = mapCenter;
+
+        Debug.Log(mapcenterX);
+        Debug.Log(mapcenterY);
+        Debug.Log(mapCenter);
+        Debug.Log(groundPlane.transform.position);
+
+        Instantiate(groundPlane, mapCenter, Quaternion.Euler(new Vector3()));
+
     }
 
     //Called when one team has run out of playable players
@@ -249,7 +273,6 @@ public class GameManager : MonoBehaviour
     {
         gameOver = true;
         freezeGame = true;
-
     }
 
     void generatePlayers()
