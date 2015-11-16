@@ -47,8 +47,9 @@ public class UnitActions : MonoBehaviour
     public int unitMAG;
     public int unitMDF;
     public float damageRollSides = 6; //d6
-
     public int actionPoints = 2;
+    public int unitPoisonCounter = 3;
+    public bool isPoisoned = false;
 
     //List of stats
     List<string> tempList = new List<string>();
@@ -67,6 +68,8 @@ public class UnitActions : MonoBehaviour
             moving = false;
             attacking = false;
             GameManager.instance.nextTurn();
+          //  if (unitStatus.Equals("Poison"))
+          //      unitPoisonCounter -= 1;
         }
         updateStatus();
     }
@@ -210,9 +213,17 @@ public class UnitActions : MonoBehaviour
         return damage;
     }
 
-    public void setUnitStatus()
+    public void setUnitStatus(UnitActions unit)
     {
-        //this will have the proper status changes one day
+        if (unit.unitStatus.Equals("Normal"))
+        {
+            
+        }
+
+        if (unit.unitStatus.Equals("Poison"))
+        {
+            unit.isPoisoned = true;
+        }
     }
 
     public virtual void TurnOnGUI()

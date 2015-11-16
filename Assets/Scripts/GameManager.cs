@@ -23,13 +23,17 @@ public class GameManager : MonoBehaviour
     static public GameObject TilePrefab_e1;
     static public GameObject TilePrefab_e2;
 
-	// block decorations
-	static public GameObject decoBush;
+    // Decorations
+    static public GameObject groundPlane;
+    static public GameObject decoBush;
 	static public GameObject decoTree;
 
     //The x and y dimensions of map loaded
     static public int MapWidth;
     static public int MapHeight;
+    static public float mapcenterX;
+    static public float mapcenterY;
+    static public Vector3 mapCenter;
 
     static public List<List<Tile>> map = new List<List<Tile>>();
     static public int currentPlayerIndex = 0;
@@ -37,6 +41,8 @@ public class GameManager : MonoBehaviour
 
     static public Team currentTeam;
     static public Team enemyTeam;
+    static public int team1TurnNum;
+    static public int team2TurnNum;
 
     void Awake()
     {
@@ -50,20 +56,28 @@ public class GameManager : MonoBehaviour
         UserPlayerPrefab = Resources.Load<GameObject>("Prefabs/UserPlayer");
         AIPlayerPrefab = Resources.Load<GameObject>("Prefabs/AIPlayer");
 
-		// Tile decorations
+		// Decorations
 		decoBush = Resources.Load<GameObject>("TerrainAssets/Bushes/Bush1");
-	}
+        groundPlane = Resources.Load<GameObject>("Prefabs/groundPlane");
+    }
 
     // Use this for initialization
     void Start()
     {
-        generateMapFromFile("example1");
+        // Load map and set related decorations
+        generateMapFromFile("Maps/example1");
+
+        //Place units on board
+        //This will later include a call to manual unit placement function
+        //once it is made
         generatePlayers();
 
         //Instantiate gameover
         Movement.UnPaintTiles(null);
         gameOver = false;
         freezeGame = false;
+        team1TurnNum = 1;
+        team2TurnNum = 0;
     }
 
     // Update is called once per frame
@@ -104,6 +118,7 @@ public class GameManager : MonoBehaviour
             //Are all the players done with their turn
             if (currentPlayerIndex + 1 < currentTeam.myRoster.Count)
             {
+                checkStatus(currentTeam.myRoster[currentPlayerIndex]);
                 currentPlayerIndex++;
                 //Change teams and put counter at start of team
             }
@@ -114,10 +129,14 @@ public class GameManager : MonoBehaviour
                     case "Team1":
                         currentTeam = team2;
                         enemyTeam = team1;
+                        team2TurnNum++;
+                        Debug.Log("Team 2 Turn Number: " + team2TurnNum);
                         break;
                     case "Team2":
                         currentTeam = team1;
                         enemyTeam = team2;
+                        team1TurnNum++;
+                        Debug.Log("Team 1 Turn Number: " + team1TurnNum);
                         break;
                     default:
                         break;
@@ -127,6 +146,23 @@ public class GameManager : MonoBehaviour
             CurrentTurnPlayer = currentTeam.myRoster[currentPlayerIndex];
         }
 
+    }
+
+    public void checkStatus(UnitActions Unit)
+    {
+        if (Unit.isPoisoned == true)
+        {
+            Unit.unitHP -= 1;
+            Unit.unitPoisonCounter -= 1;
+            Debug.Log("Unit Poisoned for " + Unit.unitPoisonCounter + " more turns!");
+            if(Unit.unitPoisonCounter == 0)
+            {
+                Unit.isPoisoned = false;
+                Unit.unitPoisonCounter = 3;
+                Unit.unitStatus = "Normal";
+                Debug.Log("Congrats, your unit is NOT poisoned");
+            }
+        }
     }
 
     public void moveCurrentPlayer(Tile destTile)
@@ -242,6 +278,20 @@ public class GameManager : MonoBehaviour
             map.Add(column);    //Add column to map
             xCoord += 1;        //Increment xCoord for next run
         }
+
+        // Initialize center holder values
+        mapcenterX = MapWidth / 2;
+        mapcenterY = MapHeight / 2;
+        mapCenter = new Vector3(mapcenterX, 0.0f, mapcenterY);
+        groundPlane.transform.position = mapCenter;
+
+        Debug.Log(mapcenterX);
+        Debug.Log(mapcenterY);
+        Debug.Log(mapCenter);
+        Debug.Log(groundPlane.transform.position);
+
+        Instantiate(groundPlane, mapCenter, Quaternion.Euler(new Vector3()));
+
     }
 
     //Called when one team has run out of playable players
@@ -249,7 +299,6 @@ public class GameManager : MonoBehaviour
     {
         gameOver = true;
         freezeGame = true;
-
     }
 
     void generatePlayers()
@@ -284,7 +333,6 @@ public class GameManager : MonoBehaviour
         player.gridPosition = new Vector2(1, (MapHeight / 2 - 1));
         player.setStats(player, "Mage");
         player.unitName = "Kyle";
-        //player.MovementTiles = 3;
         player.MovementJump = 0.5f;
 
         team1.myRoster.Add(player);
@@ -293,8 +341,6 @@ public class GameManager : MonoBehaviour
         player.gridPosition = new Vector2(1, (MapHeight / 2 + 1));
         player.setStats(player, "Cavalier");
         player.unitName = "Lars";
-        //player.AttackRange = 3;
-        //player.MovementTiles = 1;
         player.MovementJump = 0.5f;
 
         team1.myRoster.Add(player);
@@ -313,9 +359,6 @@ public class GameManager : MonoBehaviour
         player.gridPosition = new Vector2(MapHeight - 1, 2);
         player.setStats(player, "Knight");
         player.unitName = "Sir William";
-        //player.AttackRange = 2;
-        //player.MovementTiles = 6;
-        player.MovementJump = 0.0f;// too lazy to jump...
 
         team2.myRoster.Add(player);
 
@@ -323,8 +366,6 @@ public class GameManager : MonoBehaviour
         player.gridPosition = new Vector2(MapHeight - 1, 3);
         player.setStats(player, "Cavalier");
         player.unitName = "Tyler";
-       // player.AttackRange = 2;
-       // player.MovementTiles = 6;
         player.MovementJump = 0.5f;
 
         team2.myRoster.Add(player);
