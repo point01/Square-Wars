@@ -57,7 +57,7 @@ public class Tile : MonoBehaviour
                 envType = EnvironmentType.Plains;
                 tileColor = new Color(210f / 255f, 170f / 255f, 40f / 255f, 1f);
                 isAccessible = true;
-                tileStatus = "Normal";
+                tileStatus = "Poison";
                 break;
             case "tallgrass":
                 envType = EnvironmentType.TallGrass;
@@ -103,7 +103,7 @@ public class Tile : MonoBehaviour
 		if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].moving && UnitActionsPlayer.MoveList.Contains(this)) {
 			GameManager.instance.moveCurrentPlayer(this);
             GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].unitStatus = tileStatus;
-            GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].setUnitStatus();
+            GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].setUnitStatus(GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex]);
         } else if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].attacking && UnitActionsPlayer.AttackList.Contains(this)) {
 			GameManager.instance.attackWithCurrentPlayer(this);
         }		
