@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
 
     static public Team currentTeam;
     static public Team enemyTeam;
+    static public int team1TurnNum;
+    static public int team2TurnNum;
 
     void Awake()
     {
@@ -74,6 +76,8 @@ public class GameManager : MonoBehaviour
         Movement.UnPaintTiles(null);
         gameOver = false;
         freezeGame = false;
+        team1TurnNum = 1;
+        team2TurnNum = 0;
     }
 
     // Update is called once per frame
@@ -114,6 +118,7 @@ public class GameManager : MonoBehaviour
             //Are all the players done with their turn
             if (currentPlayerIndex + 1 < currentTeam.myRoster.Count)
             {
+                checkStatus(currentTeam.myRoster[currentPlayerIndex]);
                 currentPlayerIndex++;
                 //Change teams and put counter at start of team
             }
@@ -124,10 +129,14 @@ public class GameManager : MonoBehaviour
                     case "Team1":
                         currentTeam = team2;
                         enemyTeam = team1;
+                        team2TurnNum++;
+                        Debug.Log("Team 2 Turn Number: " + team2TurnNum);
                         break;
                     case "Team2":
                         currentTeam = team1;
                         enemyTeam = team2;
+                        team1TurnNum++;
+                        Debug.Log("Team 1 Turn Number: " + team1TurnNum);
                         break;
                     default:
                         break;
@@ -137,6 +146,23 @@ public class GameManager : MonoBehaviour
             CurrentTurnPlayer = currentTeam.myRoster[currentPlayerIndex];
         }
 
+    }
+
+    public void checkStatus(UnitActions Unit)
+    {
+        if (Unit.isPoisoned == true)
+        {
+            Unit.unitHP -= 1;
+            Unit.unitPoisonCounter -= 1;
+            Debug.Log("Unit Poisoned for " + Unit.unitPoisonCounter + " more turns!");
+            if(Unit.unitPoisonCounter == 0)
+            {
+                Unit.isPoisoned = false;
+                Unit.unitPoisonCounter = 3;
+                Unit.unitStatus = "Normal";
+                Debug.Log("Congrats, your unit is NOT poisoned");
+            }
+        }
     }
 
     public void moveCurrentPlayer(Tile destTile)
@@ -307,7 +333,6 @@ public class GameManager : MonoBehaviour
         player.gridPosition = new Vector2(1, (MapHeight / 2 - 1));
         player.setStats(player, "Mage");
         player.unitName = "Kyle";
-        //player.MovementTiles = 3;
         player.MovementJump = 0.5f;
 
         team1.myRoster.Add(player);
@@ -316,8 +341,6 @@ public class GameManager : MonoBehaviour
         player.gridPosition = new Vector2(1, (MapHeight / 2 + 1));
         player.setStats(player, "Cavalier");
         player.unitName = "Lars";
-        //player.AttackRange = 3;
-        //player.MovementTiles = 1;
         player.MovementJump = 0.5f;
 
         team1.myRoster.Add(player);
@@ -336,9 +359,6 @@ public class GameManager : MonoBehaviour
         player.gridPosition = new Vector2(MapHeight - 1, 2);
         player.setStats(player, "Knight");
         player.unitName = "Sir William";
-        //player.AttackRange = 2;
-        //player.MovementTiles = 6;
-        player.MovementJump = 0.0f;// too lazy to jump...
 
         team2.myRoster.Add(player);
 
@@ -346,8 +366,6 @@ public class GameManager : MonoBehaviour
         player.gridPosition = new Vector2(MapHeight - 1, 3);
         player.setStats(player, "Cavalier");
         player.unitName = "Tyler";
-       // player.AttackRange = 2;
-       // player.MovementTiles = 6;
         player.MovementJump = 0.5f;
 
         team2.myRoster.Add(player);
