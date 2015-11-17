@@ -78,6 +78,8 @@ public class GameManager : MonoBehaviour
         freezeGame = false;
         team1TurnNum = 1;
         team2TurnNum = 0;
+
+        
     }
 
     // Update is called once per frame

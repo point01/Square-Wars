@@ -78,6 +78,23 @@ public class UnitActions : MonoBehaviour
     {
         ModelUnit bu;
 
+        if (unitClass.Equals("King"))
+        {
+            bu = new ModelKing();
+            player.unitName = bu.UnitClassName;
+            player.unitType = bu.UnitClassType;
+            player.unitLore = bu.UnitClassLore;
+            player.unitHP = bu.UnitClassHP;
+            player.unitSTR = bu.UnitClassSTR;
+            player.unitDEF = bu.UnitClassDEF;
+            player.unitMAG = bu.UnitClassMAG;
+            player.unitMDF = bu.UnitClassMDF;
+            player.MovementTiles = bu.UnitClassSPD;
+            player.AttackRange = 1;
+            player.unitAGI = bu.UnitClassAGI;
+            player.unitStatus = "Normal";
+        }
+
         if (unitClass.Equals("Soldier"))
         {
             bu = new ModelSoldier();
