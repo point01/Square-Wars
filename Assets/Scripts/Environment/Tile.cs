@@ -98,13 +98,15 @@ public class Tile : MonoBehaviour
 		//transform.GetComponent<Renderer>().material.color = Color.white;
 	}
 	
-	
+	//S_AI: Add in a check to make sure it's not an AI turn or the player will be able to control their units
 	void OnMouseDown() {
-		if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].moving && UnitActionsPlayer.MoveList.Contains(this)) {
+		if (UnitActionsPlayer.MoveList != null && GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].CanMove 
+            && UnitActionsPlayer.MoveList.Contains(this)) {
 			GameManager.instance.moveCurrentPlayer(this);
             GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].unitStatus = tileStatus;
             GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].setUnitStatus(GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex]);
-        } else if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].attacking && UnitActionsPlayer.AttackList.Contains(this)) {
+        } else if (UnitActionsPlayer.AttackList != null && GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].CanAttack 
+            && UnitActionsPlayer.AttackList.Contains(this)) {
 			GameManager.instance.attackWithCurrentPlayer(this);
         }		
 		

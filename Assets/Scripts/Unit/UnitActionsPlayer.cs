@@ -18,8 +18,8 @@ public class UnitActionsPlayer : UnitActions
             transform.GetComponent<Renderer>().material.color = Color.green;
         }
         else
-        {            
-            if(GameManager.currentTeam.myRoster.Exists(x => x == this))
+        {
+            if (GameManager.currentTeam.myRoster.Exists(x => x == this))
             {
                 transform.GetComponent<Renderer>().material.color = Color.blue;
             }
@@ -27,7 +27,7 @@ public class UnitActionsPlayer : UnitActions
             {
                 transform.GetComponent<Renderer>().material.color = Color.white;
             }
-            
+
         }
 
         if (unitHP <= 0)
@@ -72,7 +72,7 @@ public class UnitActionsPlayer : UnitActions
             PlayerSlideRunning = false;
             StopCoroutine(PlayerSlide);
             transform.position = moveDestination;
-            actionPoints--;
+            CanMove = false;
         }
         base.TurnUpdate();
     }
@@ -87,7 +87,7 @@ public class UnitActionsPlayer : UnitActions
             Rect buttonRect = new Rect(0, Screen.height - buttonHeight * 3, buttonWidth, buttonHeight);
 
             //move button
-            if (GUI.Button(buttonRect, "Move"))
+            if (GUI.Button(buttonRect, "Move") && CanMove)
             {
                 //if (!moving) {
                 StartMovement();
@@ -99,7 +99,7 @@ public class UnitActionsPlayer : UnitActions
             //attack button
             buttonRect = new Rect(0, Screen.height - buttonHeight * 2, buttonWidth, buttonHeight);
 
-            if (GUI.Button(buttonRect, "Attack"))
+            if (GUI.Button(buttonRect, "Attack") && CanAttack)
             {
                 //if (!attacking) {
                 StartAttack();
@@ -113,8 +113,9 @@ public class UnitActionsPlayer : UnitActions
 
             if (GUI.Button(buttonRect, "End Turn"))
             {
-                actionPoints = 2;
-                StopEverything();
+                CanMove = false;
+                CanAttack = false;
+                Movement.UnPaintTiles();
                 GameManager.instance.nextTurn();
             }
 
@@ -126,30 +127,26 @@ public class UnitActionsPlayer : UnitActions
     public static System.Collections.Generic.List<Tile> AttackList;
     private void StartMovement()
     {
-        StopEverything();
+        Movement.UnPaintTiles();
         GameManager.CurrentTurnPlayer = GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex];
         Movement.GenerateMovementTree(GameManager.CurrentTurnPlayer);
         AttackList = null;
         MoveList = Movement.GetMovement(GameManager.CurrentTurnPlayer);
         Movement.PaintTiles(MoveList, AttackList);
-        moving = true;
-        attacking = false;
     }
     private void StartAttack()
     {
-        StopEverything();
+        Movement.UnPaintTiles();
+        //StopEverything();
         MoveList = null;
         GameManager.CurrentTurnPlayer = GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex];
         AttackList = Movement.GetAttack(GameManager.CurrentTurnPlayer);
         Movement.PaintTiles(MoveList, AttackList);
-        moving = false;
-        attacking = true;
     }
-    public void StopEverything()
-    {
-        Movement.UnPaintTiles(MoveList);
-        Movement.UnPaintTiles(AttackList);
-        moving = false;
-        attacking = false;
-    }
+    //    public void StopEverything()
+    //    {
+    //     //   Movement.UnPaintTiles();
+    ////        Movement.UnPaintTiles(MoveList);
+    //  //      Movement.UnPaintTiles(AttackList);
+    //    }
 }
