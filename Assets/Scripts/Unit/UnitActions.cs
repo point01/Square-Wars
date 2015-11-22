@@ -19,8 +19,8 @@ public class UnitActions : MonoBehaviour
     public float moveSpeed;
     public System.Collections.Generic.Queue<Tile> moveQueue;
 
-    public bool moving = false;
-    public bool attacking = false;
+    public bool CanMove;
+    public bool CanAttack;
     public bool isAlive
     {
         get { return unitHP > 0; }
@@ -47,7 +47,6 @@ public class UnitActions : MonoBehaviour
     public int unitMAG;
     public int unitMDF;
     public float damageRollSides = 6; //d6
-    public int actionPoints = 2;
     public int unitPoisonCounter = 3;
     public bool isPoisoned = false;
 
@@ -61,15 +60,11 @@ public class UnitActions : MonoBehaviour
 
     public virtual void TurnUpdate()
     {
-
-        if (actionPoints <= 0)
+        if ((!CanMove) && (!CanAttack))
         {
-            actionPoints = 2;
-            moving = false;
-            attacking = false;
             GameManager.instance.nextTurn();
-          //  if (unitStatus.Equals("Poison"))
-          //      unitPoisonCounter -= 1;
+            //  if (unitStatus.Equals("Poison"))
+            //      unitPoisonCounter -= 1;
         }
         updateStatus();
     }
@@ -77,6 +72,23 @@ public class UnitActions : MonoBehaviour
     public void setStats(UnitActionsPlayer player, string unitClass)
     {
         ModelUnit bu;
+
+        if (unitClass.Equals("King"))
+        {
+            bu = new ModelKing();
+            player.unitName = bu.UnitClassName;
+            player.unitType = bu.UnitClassType;
+            player.unitLore = bu.UnitClassLore;
+            player.unitHP = bu.UnitClassHP;
+            player.unitSTR = bu.UnitClassSTR;
+            player.unitDEF = bu.UnitClassDEF;
+            player.unitMAG = bu.UnitClassMAG;
+            player.unitMDF = bu.UnitClassMDF;
+            player.MovementTiles = bu.UnitClassSPD;
+            player.AttackRange = 1;
+            player.unitAGI = bu.UnitClassAGI;
+            player.unitStatus = "Normal";
+        }
 
         if (unitClass.Equals("Soldier"))
         {
@@ -200,7 +212,7 @@ public class UnitActions : MonoBehaviour
     {
         int damage;
 
-        if (attacker.unitType.Equals("Mage"))
+        if (attacker.unitType != null && attacker.unitType.Equals("Mage"))
         {
             damage = attacker.unitMAG - defender.unitMDF;
         }
@@ -217,7 +229,7 @@ public class UnitActions : MonoBehaviour
     {
         if (unit.unitStatus.Equals("Normal"))
         {
-            
+
         }
 
         if (unit.unitStatus.Equals("Poison"))
@@ -247,7 +259,7 @@ public class UnitActions : MonoBehaviour
         tempList.Add("Def: " + unitDEF.ToString());
         tempList.Add("Magic Dmg: " + unitMAG.ToString());
         tempList.Add("Mag Def: " + unitMDF.ToString());
-        tempList.Add("AP: " + actionPoints.ToString());
+        //        tempList.Add("AP: " + actionPoints.ToString());
 
         //Update UI static variable
         UnitInfo.unitInfo = tempList;

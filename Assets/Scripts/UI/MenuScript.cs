@@ -53,6 +53,7 @@ public class MenuScript : MonoBehaviour {
         exitText = exitText.GetComponent<Button>();
         quitMenu.enabled = false;
         startCanvas.enabled = true;
+
         //Game Mode
         gameModeCanvas = gameModeCanvas.GetComponent<Canvas>();
         difficultDropDown = difficultDropDown.GetComponent<Dropdown>();
@@ -79,8 +80,8 @@ public class MenuScript : MonoBehaviour {
         unit3Button = unit3Button.GetComponent<Button>();
         unit4Button = unit4Button.GetComponent<Button>();
         addUnitButton = addUnitButton.GetComponent<Button>();
-        currentTeam = GetComponent<Text>();
-        teamCostText = GetComponent<Text>();
+        currentTeam = currentTeam.GetComponent<Text>();
+        teamCostText = teamCostText.GetComponent<Text>();
         selectedUnit = "";
 
         teamCostText.text = teamCost.ToString();  
@@ -241,6 +242,7 @@ public class MenuScript : MonoBehaviour {
     // Add Unit button is pressed
     public void addUnitButtonPress()
     {
+		Debug.Log (selectedUnit);
         if(selectedUnit != "" && teamCost > 0)
         {
             switch (selectedUnit)
@@ -250,6 +252,7 @@ public class MenuScript : MonoBehaviour {
                     {
                         teamCost = teamCost - 2;
                         currentTeamList.Add(selectedUnit);
+						Debug.Log("Here bitch");
                         updateCurrentTeam();
                     }
                     break;
@@ -288,6 +291,7 @@ public class MenuScript : MonoBehaviour {
     void updateCurrentTeam()
     {
         //Convert the List to a String
+		Debug.Log ("Fucked up");
         string info = string.Join("\n", currentTeamList.ToArray());
         //Display the updated info
         currentTeam.text = info;
