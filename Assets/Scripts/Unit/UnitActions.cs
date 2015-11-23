@@ -15,7 +15,7 @@ public class UnitActions : MonoBehaviour
 
     public ModelUnit unit = new ModelUnit();
     public Vector3 moveDestination;
-    public Tile DestinationTile;
+    public Tile currentUnitTile;
     public float moveSpeed;
     public System.Collections.Generic.Queue<Tile> moveQueue;
 
@@ -32,9 +32,10 @@ public class UnitActions : MonoBehaviour
     }
 
     public string unitName;
-    public string unitType;
+    public string unitClass;
     public string unitLore;
     public string unitStatus;
+    public string unitType;
     public int unitAGI;
     public int unitHP;
     public int MovementTiles;
@@ -77,7 +78,7 @@ public class UnitActions : MonoBehaviour
         {
             bu = new ModelKing();
             player.unitName = bu.UnitClassName;
-            player.unitType = bu.UnitClassType;
+            player.unitClass = bu.UnitClassType;
             player.unitLore = bu.UnitClassLore;
             player.unitHP = bu.UnitClassHP;
             player.unitSTR = bu.UnitClassSTR;
@@ -94,7 +95,7 @@ public class UnitActions : MonoBehaviour
         {
             bu = new ModelSoldier();
             player.unitName = bu.UnitClassName;
-            player.unitType = bu.UnitClassType;
+            player.unitClass = bu.UnitClassType;
             player.unitLore = bu.UnitClassLore;
             player.unitHP = bu.UnitClassHP;
             player.unitSTR = bu.UnitClassSTR;
@@ -111,7 +112,7 @@ public class UnitActions : MonoBehaviour
         {
             bu = new ModelKnight();
             player.unitName = bu.UnitClassName;
-            player.unitType = bu.UnitClassType;
+            player.unitClass = bu.UnitClassType;
             player.unitLore = bu.UnitClassLore;
             player.unitHP = bu.UnitClassHP;
             player.unitSTR = bu.UnitClassSTR;
@@ -128,7 +129,7 @@ public class UnitActions : MonoBehaviour
         {
             bu = new ModelMage();
             player.unitName = bu.UnitClassName;
-            player.unitType = bu.UnitClassType;
+            player.unitClass = bu.UnitClassType;
             player.unitLore = bu.UnitClassLore;
             player.unitHP = bu.UnitClassHP;
             player.unitSTR = bu.UnitClassSTR;
@@ -145,7 +146,7 @@ public class UnitActions : MonoBehaviour
         {
             bu = new ModelCavalier();
             player.unitName = bu.UnitClassName;
-            player.unitType = bu.UnitClassType;
+            player.unitClass = bu.UnitClassType;
             player.unitLore = bu.UnitClassLore;
             player.unitHP = bu.UnitClassHP;
             player.unitSTR = bu.UnitClassSTR;
@@ -212,7 +213,7 @@ public class UnitActions : MonoBehaviour
     {
         int damage;
 
-        if (attacker.unitType != null && attacker.unitType.Equals("Mage"))
+        if (attacker.unitClass != null && attacker.unitClass.Equals("Mage"))
         {
             damage = attacker.unitMAG - defender.unitMDF;
         }
@@ -245,6 +246,8 @@ public class UnitActions : MonoBehaviour
 
 
 
+
+
     //Where the UI will be updated. 
     void updateStatus()
     {
@@ -252,7 +255,7 @@ public class UnitActions : MonoBehaviour
         tempList.Clear();
         //Add all stats that want to be displayed
         tempList.Add("Name: " + unitName);
-        tempList.Add("Type: " + unitType);
+        tempList.Add("Type: " + unitClass);
         tempList.Add("Status: " + unitStatus);
         tempList.Add("HP: " + unitHP.ToString());
         tempList.Add("Atk Dmg: " + unitSTR.ToString());

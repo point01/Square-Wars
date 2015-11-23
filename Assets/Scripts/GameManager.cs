@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
     static public bool gameOver;
     static public bool freezeGame;
 
+    //TODO CHANGE IN START SCREEN
+    static public string difficulty;
+
     // Environment blocks
     static public GameObject TilePrefab;
     static public GameObject TilePrefab_e0;
@@ -169,40 +172,15 @@ public class GameManager : MonoBehaviour
 
             //S_AI: Example of making a unit move with a script
             // move some of this code into unitactionsai or something
-            if (CurrentTurnPlayer.unitName == "Sir William")
+            if (CurrentTurnPlayer.unitType == "AI")
             {
-                // --- ATTACK
-                List<Tile> AttackTiles = Movement.GetAttack(CurrentTurnPlayer);
-                UnitActionsPlayer.AttackList = AttackTiles;
-                Movement.PaintTiles(null, AttackTiles);
-                //try to attack every available tile. If it can attack, it will set CanAttack false and exit the for loop
-                for(int a = 0; CurrentTurnPlayer.CanAttack && a < AttackTiles.Count; ++a)
-                {
-                    attackWithCurrentPlayer(AttackTiles[a]);
-                }
-                // --- MOVEMENT
-                //get tiles unit can move to
-                Movement.GenerateMovementTree(GameManager.CurrentTurnPlayer);
-                List<Tile> MoveTiles = Movement.GetMovement(CurrentTurnPlayer);
-                Movement.PaintTiles(MoveTiles, null);
-                //pick a random tile
-                int TileChoose = Movement.RMove.Next(0, MoveTiles.Count);
-                //                Debug.Log("Tile count " + MoveTiles.Count.ToString() + ", chose " + TileChoose.ToString());
-                //tell the unit to move to the tile
-                moveCurrentPlayer(MoveTiles[TileChoose]);
-                CurrentTurnPlayer.CanMove = false;
-
-                //set can attack to false to make it end the turn
-                //for an AI unit, after the movement is done you'll need to find out how to make it
-                // try to attack again once it's done moving
-                CurrentTurnPlayer.CanAttack = false;
-                Movement.UnPaintTiles();
+                AIControl.controlAI();
             }
         }
 
     }
 
-    public void moveCurrentPlayer(Tile destTile)
+    public static void moveCurrentPlayer(Tile destTile)
     {
         currentTeam.myRoster[currentPlayerIndex].gridPosition = destTile.gridPosition;
         currentTeam.myRoster[currentPlayerIndex].moveDestination = destTile.transform.position + 1.5f * Vector3.up;
@@ -212,7 +190,7 @@ public class GameManager : MonoBehaviour
     }
 
     //S_AI: if the AI calls this function then it should do the attack routines properly
-    public void attackWithCurrentPlayer(Tile destTile)
+    public static void attackWithCurrentPlayer(Tile destTile)
     {
         UnitActions target = null;
         UnitActions currentPlayer = currentTeam.myRoster[currentPlayerIndex];
@@ -367,6 +345,7 @@ public class GameManager : MonoBehaviour
         ModelUnit baseUnit = new ModelSoldier();
         currentTeam = team1;
         enemyTeam = team2;
+        //Set up Team stats
         team1.teamName = "Team1";
         team2.teamName = "Team2";
 
@@ -384,6 +363,7 @@ public class GameManager : MonoBehaviour
         player.gridPosition = new Vector2(1, (MapHeight / 2));
         player.setStats(player, "Soldier");
         player.MovementJump = 0.5f;
+        player.unitType = "AI";
 
         team1.myRoster.Add(player);
 
@@ -394,6 +374,8 @@ public class GameManager : MonoBehaviour
         player.setStats(player, "Mage");
         player.unitName = "Kyle";
         player.MovementJump = 0.5f;
+        player.unitType = "AI";
+
 
         team1.myRoster.Add(player);
 
@@ -402,6 +384,8 @@ public class GameManager : MonoBehaviour
         player.setStats(player, "Cavalier");
         player.unitName = "Lars";
         player.MovementJump = 0.5f;
+        player.unitType = "AI";
+
 
         team1.myRoster.Add(player);
 
@@ -412,6 +396,7 @@ public class GameManager : MonoBehaviour
         player.AttackRange = 5;
         player.MovementTiles = 3;
         player.MovementJump = 0.5f;
+
 
         team2.myRoster.Add(player);
 

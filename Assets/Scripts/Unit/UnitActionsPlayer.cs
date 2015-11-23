@@ -89,11 +89,9 @@ public class UnitActionsPlayer : UnitActions
             //move button
             if (GUI.Button(buttonRect, "Move") && CanMove)
             {
-                //if (!moving) {
+                
                 StartMovement();
-                //} else {
-                //    StopEverything();
-                //}
+
             }
 
             //attack button
@@ -101,11 +99,8 @@ public class UnitActionsPlayer : UnitActions
 
             if (GUI.Button(buttonRect, "Attack") && CanAttack)
             {
-                //if (!attacking) {
                 StartAttack();
-                //} else {
-                //    StopEverything();
-                //}
+             
             }
 
             //end turn button
