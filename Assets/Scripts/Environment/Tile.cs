@@ -93,8 +93,9 @@ public class Tile : MonoBehaviour
 		}
         */
     }
-	
-	void OnMouseExit() {
+
+
+    void OnMouseExit() {
 		//transform.GetComponent<Renderer>().material.color = Color.white;
 	}
 	
@@ -102,12 +103,12 @@ public class Tile : MonoBehaviour
 	void OnMouseDown() {
 		if (UnitActionsPlayer.MoveList != null && GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].CanMove 
             && UnitActionsPlayer.MoveList.Contains(this)) {
-			GameManager.instance.moveCurrentPlayer(this);
+			GameManager.moveCurrentPlayer(this);
             GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].unitStatus = tileStatus;
             GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].setUnitStatus(GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex]);
         } else if (UnitActionsPlayer.AttackList != null && GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].CanAttack 
             && UnitActionsPlayer.AttackList.Contains(this)) {
-			GameManager.instance.attackWithCurrentPlayer(this);
+			GameManager.attackWithCurrentPlayer(this);
         }		
 		
 	}
