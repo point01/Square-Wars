@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Movement : MonoBehaviour
 {
-    private static System.Random RMove = new System.Random();
+    public static System.Random RMove = new System.Random();
 
     // For Dijkstra's algorithm. Update it to a higher value if player movement bloats up too high
     private const int Infinity = 99999;
@@ -296,6 +296,11 @@ public class Movement : MonoBehaviour
             if (retval.Contains(temp))
                 retval.Remove(temp);
         }
+        for(int i = retval.Count - 1; i > -1; --i)
+        {
+            if (retval[i] == null)
+                retval.Remove(retval[i]);
+        }
         return retval;
     }
 
@@ -329,7 +334,18 @@ public class Movement : MonoBehaviour
                 if (movetiles == null || !movetiles.Contains(t))
                     t.transform.GetComponent<Renderer>().material.color = Color.red;
     }
-    public static void UnPaintTiles(System.Collections.Generic.List<Tile> tiles)
+    /*    public static void UnPaintTiles(System.Collections.Generic.List<Tile> tiles)
+        {
+            for (int i = 0; i < GameManager.MapWidth; ++i)
+            {//this should probably be moved to game manager and have things like tile effects incorporated into it
+                for (int j = 0; j < GameManager.MapHeight; ++j)
+                {
+                    Tile targetTile = GameManager.map[i][j];
+                    targetTile.transform.GetComponent<Renderer>().material.color = targetTile.tileColor;
+                }
+            }
+        }*/
+    public static void UnPaintTiles()
     {
         for (int i = 0; i < GameManager.MapWidth; ++i)
         {//this should probably be moved to game manager and have things like tile effects incorporated into it
