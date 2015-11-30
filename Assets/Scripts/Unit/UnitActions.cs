@@ -28,6 +28,11 @@ public class UnitActions : MonoBehaviour
         {
             if (!value) unitHP = 0;
             if (value && unitHP < 1) unitHP = 1;
+            if (unitHP == 0)
+            {
+                CanAttack = false;
+                CanMove = false;
+            }
         }
     }
 
