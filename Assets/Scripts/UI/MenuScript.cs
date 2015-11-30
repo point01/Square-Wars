@@ -30,20 +30,10 @@ public class MenuScript : MonoBehaviour {
     public Canvas chooseTeamCanvas;
     public Button chooseTeamPlayButton;
     public Button backToChooseMap;
-    public Button unit1Button;
-    public Button unit2Button;
-    public Button unit3Button;
-    public Button unit4Button;
-    public Button addUnitButton;
-    public Text currentTeam;
-    public List<string> currentTeamList;
-    public string selectedUnit;
-    public int teamCost;
-    public Text teamCostText;
 
 
-    // Use this for initialization
-    void Start () {
+	// Use this for initialization
+	void Start () {
 
 
         //Quit menu and Start Menu
@@ -53,7 +43,6 @@ public class MenuScript : MonoBehaviour {
         exitText = exitText.GetComponent<Button>();
         quitMenu.enabled = false;
         startCanvas.enabled = true;
-
         //Game Mode
         gameModeCanvas = gameModeCanvas.GetComponent<Canvas>();
         difficultDropDown = difficultDropDown.GetComponent<Dropdown>();
@@ -75,21 +64,7 @@ public class MenuScript : MonoBehaviour {
         chooseTeamPlayButton = chooseTeamPlayButton.GetComponent<Button>();
         backToChooseMap = backToChooseMap.GetComponent<Button>();
         chooseTeamCanvas.enabled = false;
-        unit1Button = unit1Button.GetComponent<Button>();
-        unit2Button = unit2Button.GetComponent<Button>();
-        unit3Button = unit3Button.GetComponent<Button>();
-        unit4Button = unit4Button.GetComponent<Button>();
-        addUnitButton = addUnitButton.GetComponent<Button>();
-        currentTeam = currentTeam.GetComponent<Text>();
-        teamCostText = teamCostText.GetComponent<Text>();
-        selectedUnit = "";
-
-        teamCostText.text = teamCost.ToString();  
-
-    }
-
-    void Update()
-    {
+        
 
     }
 
@@ -150,6 +125,7 @@ public class MenuScript : MonoBehaviour {
     public void StartGame()
     {
         setEnabled(gameModeCanvas);
+        //Application.LoadLevel(1);        
     }
 
     //In quit screen press exit
@@ -206,97 +182,6 @@ public class MenuScript : MonoBehaviour {
         setEnabled(chooseMapCanvas);
 
     }
-    //Unit1 Button is pressed
-    public void unit1ButtonPress()
-    {
-        selectedUnit = "Knight";
-        Debug.Log(teamCost.ToString());
-        Debug.Log(selectedUnit);
-    }
 
-    //Unit2 Button is pressed
-    public void unit2ButtonPress()
-    {
-       selectedUnit = "Mage";
-        Debug.Log(selectedUnit);
-
-
-    }
-
-    //Unit3 Button is pressed
-    public void unit3ButtonPress()
-    {        
-        selectedUnit = "Soldier";
-        Debug.Log(selectedUnit);
-
-    }
-
-    //Unit4 Button is pressed
-    public void unit4ButtonPress()
-    {
-        selectedUnit = "Cavalier";
-        Debug.Log(selectedUnit);
-
-    }
-
-    // Add Unit button is pressed
-    public void addUnitButtonPress()
-    {
-		Debug.Log (selectedUnit);
-        if(selectedUnit != "" && teamCost > 0)
-        {
-            switch (selectedUnit)
-            {
-                case "Knight":
-                    if (teamCost >= 2)
-                    {
-                        teamCost = teamCost - 2;
-                        currentTeamList.Add(selectedUnit);
-						Debug.Log("Here bitch");
-                        updateCurrentTeam();
-                    }
-                    break;
-                case "Mage":
-                    if (teamCost >= 2)
-                    {
-                        currentTeamList.Add(selectedUnit);
-                        teamCost = teamCost - 2;
-                        updateCurrentTeam();
-                    }
-                    break;
-                case "Soldier":
-                    if (teamCost >= 1)
-                    {
-                        currentTeamList.Add(selectedUnit);
-                        teamCost = teamCost - 1;
-                        updateCurrentTeam();
-                    }
-
-                    break;
-                case "Cavalier":
-                    if(teamCost >= 3)
-                    {
-                        currentTeamList.Add(selectedUnit);
-                        teamCost = teamCost - 3;
-                        updateCurrentTeam();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        selectedUnit = "";
-    }
-    
-    void updateCurrentTeam()
-    {
-        //Convert the List to a String
-		Debug.Log ("Fucked up");
-        string info = string.Join("\n", currentTeamList.ToArray());
-        //Display the updated info
-        currentTeam.text = info;
-        string cost = "" + teamCost;
-        teamCostText.text = cost;
-    }
 
 }

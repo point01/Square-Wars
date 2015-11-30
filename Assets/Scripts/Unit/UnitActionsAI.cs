@@ -21,7 +21,7 @@ public class UnitActionsAI : UnitActions {
 			
 			if (Vector3.Distance(moveDestination, transform.position) <= 0.1f) {
 				transform.position = moveDestination;
-                CanMove = false;
+				actionPoints--;
 			}
 		} else {
 			moveDestination = new Vector3(0 - Mathf.Floor(GameManager.MapWidth/2),1.5f, -0 + Mathf.Floor(GameManager.MapHeight/2));
