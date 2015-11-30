@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class AIControl
-{
+public class AIControl {
 
     private static bool hasAttacked = false;
     private static bool firstAttempt = true;
@@ -17,20 +16,24 @@ public class AIControl
         move();
 
         //Check if the unit attacked first
-        //this won't actually work since it runs before the unit finishes movement
-        if (GameManager.CurrentTurnPlayer.CanAttack)
-        {
-            attackAI();
-        }
-        endTurnAI();
+      //  if (hasAttacked)
+      //  {
+            endTurnAI();
+      //  }
+        //Attempt attacking again
+       // else
+       // {
+      //      attackAI();
+       // }
 
-
+         //   endTurnAI();
 
 
     }
 
     private static void endTurnAI()
     {
+
         hasAttacked = false;
         GameManager.CurrentTurnPlayer.CanAttack = false;
 
@@ -50,7 +53,7 @@ public class AIControl
             //Find any and all enemies in the possible attack tiles and add them to a list of possible targets
             foreach (UnitActions p in GameManager.enemyTeam.myRoster)
             {
-                if (p.gridPosition == attackTiles[a].gridPosition && p.isAlive)
+                if (p.gridPosition == attackTiles[a].gridPosition)
                 {
                     possibleTargets.Add(p);
                 }
@@ -59,7 +62,7 @@ public class AIControl
 
         //Pick a target and attack
         //Check if there are possible targets
-        if (possibleTargets.Count > 0)
+        if(possibleTargets.Count > 0)
         {
             UnitActions target = possibleTargets[0];
             foreach (UnitActions p in possibleTargets)
@@ -89,29 +92,23 @@ public class AIControl
 
         // Choose which tile to go to
         // TODO : Check if movementTiles + attackRange can reach an opponent
-        foreach (UnitActions p in GameManager.enemyTeam.myRoster)
+        foreach(UnitActions p in GameManager.enemyTeam.myRoster)
         {
-            if (p.isAlive)
+            int tempDist = Movement.GetDistance(Movement.GetTileFromPlayer(p), Movement.GetTileFromPlayer(GameManager.CurrentTurnPlayer));
+            // Check if the currentTargetDistance is closer than the previous
+            if (tempDist < currentTargetDistance)
             {
-                int tempDist = Movement.GetDistance(Movement.GetTileFromPlayer(p), Movement.GetTileFromPlayer(GameManager.CurrentTurnPlayer));
-                // Check if the currentTargetDistance is closer than the previous
-                if (tempDist < currentTargetDistance)
-                {
-                    currentTargetDistance = tempDist;
-                    target = p;
-                }
+                currentTargetDistance = tempDist;
+                target = p;
             }
         }
-        if (target != null)
-            moveTowardsUnit(target);
-        else
-            GameManager.CurrentTurnPlayer.CanMove = false;
+        moveTowardsUnit(target);
         // Check distance between movementTiles and enemy. Move to closest tile.
         // Tell unit to move to tileChoice
-        //GameManager.CurrentTurnPlayer.CanMove = false;
+        GameManager.CurrentTurnPlayer.CanMove = false;
     }
 
-
+    
     public static void moveTowardsUnit(UnitActions target)
     {
         int currentDist = 9999;
@@ -119,9 +116,9 @@ public class AIControl
         Tile ldestTile = null;
 
         // Check distance between movementTiles and enemy to get the closest tile.
-        /*foreach (UnitActions p in GameManager.enemyTeam.myRoster)
+        foreach (UnitActions p in GameManager.enemyTeam.myRoster)
         {
-            foreach (Tile t in MoveTiles)
+            foreach(Tile t in MoveTiles)
             {
                 int tempDist = Movement.GetDistance(Movement.GetTileFromPlayer(p), t);
                 //TODO add condition to check if tile is full or not
@@ -131,16 +128,6 @@ public class AIControl
                     ldestTile = t;
                 }
 
-            }
-        }*/
-        //previous code doesn't actually use the target?
-        foreach (Tile t in MoveTiles)
-        {
-            int tempDist = Movement.GetDistance(Movement.GetTileFromPlayer(target), t);
-            if (tempDist < currentDist)
-            {
-                currentDist = tempDist;
-                ldestTile = t;
             }
         }
         GameManager.moveCurrentPlayer(ldestTile);

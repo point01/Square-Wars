@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     static public Team team2 = new Team();
     static public bool gameOver;
     static public bool freezeGame;
-    // static public bool AITurn;
 
     //TODO CHANGE IN START SCREEN
     static public string difficulty;
@@ -82,7 +81,6 @@ public class GameManager : MonoBehaviour
         freezeGame = false;
         team1TurnNum = 1;
         team2TurnNum = 0;
-        //  AITurn = false;
 
 
     }
@@ -128,7 +126,7 @@ public class GameManager : MonoBehaviour
             int i;
             for (i = 0; turndone && i < currentTeam.myRoster.Count; ++i)
             {
-                if ((currentTeam.myRoster[i].CanMove || currentTeam.myRoster[i].CanAttack) && currentTeam.myRoster[i].isAlive)
+                if (currentTeam.myRoster[i].CanMove || currentTeam.myRoster[i].CanAttack)
                 {
                     turndone = false;
                 }
@@ -164,11 +162,8 @@ public class GameManager : MonoBehaviour
                 currentPlayerIndex = 0;
                 foreach (UnitActions a in currentTeam.myRoster)
                 {
-                    if (a.isAlive)
-                    {
-                        a.CanMove = true;
-                        a.CanAttack = true;
-                    }
+                    a.CanMove = true;
+                    a.CanAttack = true;
                 }
             }
             UnitActionsPlayer.MoveList = null;
@@ -179,9 +174,7 @@ public class GameManager : MonoBehaviour
             // move some of this code into unitactionsai or something
             if (CurrentTurnPlayer.unitType == "AI")
             {
-                //  AITurn = true;
                 AIControl.controlAI();
-                //  AITurn = false;
             }
         }
 
@@ -215,7 +208,6 @@ public class GameManager : MonoBehaviour
             {
                 currentPlayer.unitCombat(currentPlayer, target);
                 currentPlayer.CanAttack = false;
-                Movement.UnPaintTiles();
             }
             else
             {
