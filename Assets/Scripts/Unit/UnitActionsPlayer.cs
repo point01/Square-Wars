@@ -79,6 +79,7 @@ public class UnitActionsPlayer : UnitActions
 
     public override void TurnOnGUI()
     {
+        //Add AITurn to get rid of GUI
         if (!GameManager.gameOver && !GameManager.freezeGame)
         {
             float buttonHeight = 50;
