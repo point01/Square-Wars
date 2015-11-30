@@ -57,7 +57,7 @@ public class Tile : MonoBehaviour
                 envType = EnvironmentType.Plains;
                 tileColor = new Color(210f / 255f, 170f / 255f, 40f / 255f, 1f);
                 isAccessible = true;
-                tileStatus = "Poison";
+                tileStatus = "Normal";
                 break;
             case "tallgrass":
                 envType = EnvironmentType.TallGrass;
@@ -98,15 +98,13 @@ public class Tile : MonoBehaviour
 		//transform.GetComponent<Renderer>().material.color = Color.white;
 	}
 	
-	//S_AI: Add in a check to make sure it's not an AI turn or the player will be able to control their units
+	
 	void OnMouseDown() {
-		if (UnitActionsPlayer.MoveList != null && GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].CanMove 
-            && UnitActionsPlayer.MoveList.Contains(this)) {
+		if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].moving && UnitActionsPlayer.MoveList.Contains(this)) {
 			GameManager.instance.moveCurrentPlayer(this);
             GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].unitStatus = tileStatus;
-            GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].setUnitStatus(GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex]);
-        } else if (UnitActionsPlayer.AttackList != null && GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].CanAttack 
-            && UnitActionsPlayer.AttackList.Contains(this)) {
+            GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].setUnitStatus();
+        } else if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].attacking && UnitActionsPlayer.AttackList.Contains(this)) {
 			GameManager.instance.attackWithCurrentPlayer(this);
         }		
 		

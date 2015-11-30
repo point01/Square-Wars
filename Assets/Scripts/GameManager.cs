@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     // Decorations
     static public GameObject groundPlane;
     static public GameObject decoBush;
-    static public GameObject decoTree;
+	static public GameObject decoTree;
 
     //The x and y dimensions of map loaded
     static public int MapWidth;
@@ -41,8 +41,6 @@ public class GameManager : MonoBehaviour
 
     static public Team currentTeam;
     static public Team enemyTeam;
-    static public int team1TurnNum;
-    static public int team2TurnNum;
 
     void Awake()
     {
@@ -56,8 +54,8 @@ public class GameManager : MonoBehaviour
         UserPlayerPrefab = Resources.Load<GameObject>("Prefabs/UserPlayer");
         AIPlayerPrefab = Resources.Load<GameObject>("Prefabs/AIPlayer");
 
-        // Decorations
-        decoBush = Resources.Load<GameObject>("TerrainAssets/Bushes/Bush1");
+		// Decorations
+		decoBush = Resources.Load<GameObject>("TerrainAssets/Bushes/Bush1");
         groundPlane = Resources.Load<GameObject>("Prefabs/groundPlane");
     }
 
@@ -73,13 +71,9 @@ public class GameManager : MonoBehaviour
         generatePlayers();
 
         //Instantiate gameover
-        Movement.UnPaintTiles();
+        Movement.UnPaintTiles(null);
         gameOver = false;
         freezeGame = false;
-        team1TurnNum = 1;
-        team2TurnNum = 0;
-
-
     }
 
     // Update is called once per frame
@@ -114,90 +108,33 @@ public class GameManager : MonoBehaviour
         //Check if game going
         if (!gameOver || !freezeGame)
         {
-            // Debug.Log(currentPlayerIndex.ToString());
-            //UserPlayerPrefab.GetComponent<UnitActionsPlayer>().StopEverything();
-            Movement.UnPaintTiles();
+           // Debug.Log(currentPlayerIndex.ToString());
+            UserPlayerPrefab.GetComponent<UnitActionsPlayer>().StopEverything();
 
             //Are all the players done with their turn
-            bool turndone = true;
-            int i;
-            for (i = 0; turndone && i < currentTeam.myRoster.Count; ++i)
+            if (currentPlayerIndex + 1 < currentTeam.myRoster.Count)
             {
-                if (currentTeam.myRoster[i].CanMove || currentTeam.myRoster[i].CanAttack)
-                {
-                    turndone = false;
-                }
+                currentPlayerIndex++;
+                //Change teams and put counter at start of team
             }
-            --i;
-            currentPlayerIndex = i;
-            /*            if (currentPlayerIndex + 1 < currentTeam.myRoster.Count)
-                        {
-                            checkStatus(currentTeam.myRoster[currentPlayerIndex]);
-                            currentPlayerIndex++;
-                            //Change teams and put counter at start of team
-                        }
-                        else*/
-            if (turndone)
+            else
             {
                 switch (currentTeam.teamName)
                 {
                     case "Team1":
                         currentTeam = team2;
                         enemyTeam = team1;
-                        team2TurnNum++;
-                        Debug.Log("Team 2 Turn Number: " + team2TurnNum);
                         break;
                     case "Team2":
                         currentTeam = team1;
                         enemyTeam = team2;
-                        team1TurnNum++;
-                        Debug.Log("Team 1 Turn Number: " + team1TurnNum);
                         break;
                     default:
                         break;
                 }
                 currentPlayerIndex = 0;
-                foreach (UnitActions a in currentTeam.myRoster)
-                {
-                    a.CanMove = true;
-                    a.CanAttack = true;
-                }
             }
-            UnitActionsPlayer.MoveList = null;
-            UnitActionsPlayer.AttackList = null;
             CurrentTurnPlayer = currentTeam.myRoster[currentPlayerIndex];
-
-            //S_AI: Example of making a unit move with a script
-            // move some of this code into unitactionsai or something
-            if (CurrentTurnPlayer.unitName == "Sir William")
-            {
-                // --- ATTACK
-                List<Tile> AttackTiles = Movement.GetAttack(CurrentTurnPlayer);
-                UnitActionsPlayer.AttackList = AttackTiles;
-                Movement.PaintTiles(null, AttackTiles);
-                //try to attack every available tile. If it can attack, it will set CanAttack false and exit the for loop
-                for(int a = 0; CurrentTurnPlayer.CanAttack && a < AttackTiles.Count; ++a)
-                {
-                    attackWithCurrentPlayer(AttackTiles[a]);
-                }
-                // --- MOVEMENT
-                //get tiles unit can move to
-                Movement.GenerateMovementTree(GameManager.CurrentTurnPlayer);
-                List<Tile> MoveTiles = Movement.GetMovement(CurrentTurnPlayer);
-                Movement.PaintTiles(MoveTiles, null);
-                //pick a random tile
-                int TileChoose = Movement.RMove.Next(0, MoveTiles.Count);
-                //                Debug.Log("Tile count " + MoveTiles.Count.ToString() + ", chose " + TileChoose.ToString());
-                //tell the unit to move to the tile
-                moveCurrentPlayer(MoveTiles[TileChoose]);
-                CurrentTurnPlayer.CanMove = false;
-
-                //set can attack to false to make it end the turn
-                //for an AI unit, after the movement is done you'll need to find out how to make it
-                // try to attack again once it's done moving
-                CurrentTurnPlayer.CanAttack = false;
-                Movement.UnPaintTiles();
-            }
         }
 
     }
@@ -207,11 +144,9 @@ public class GameManager : MonoBehaviour
         currentTeam.myRoster[currentPlayerIndex].gridPosition = destTile.gridPosition;
         currentTeam.myRoster[currentPlayerIndex].moveDestination = destTile.transform.position + 1.5f * Vector3.up;
         currentTeam.myRoster[currentPlayerIndex].moveQueue = Movement.CurrentMovementTree.GetMoveQueue(destTile);
-        Movement.UnPaintTiles();
-        //UserPlayerPrefab.GetComponent<UnitActionsPlayer>().StopEverything();
+        UserPlayerPrefab.GetComponent<UnitActionsPlayer>().StopEverything();
     }
 
-    //S_AI: if the AI calls this function then it should do the attack routines properly
     public void attackWithCurrentPlayer(Tile destTile)
     {
         UnitActions target = null;
@@ -224,36 +159,20 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (target != null && currentPlayer.CanAttack)
+        if (target != null)
         {
             if (UnitActionsPlayer.AttackList.Contains(destTile))
             {
+                currentPlayer.actionPoints--;
                 currentPlayer.unitCombat(currentPlayer, target);
-                currentPlayer.CanAttack = false;
+
             }
             else
             {
                 Debug.Log("Target is not in range!");
             }
         }
-        //        UserPlayerPrefab.GetComponent<UnitActionsPlayer>().StopEverything();
-    }
-
-    public void OnTurnEnd(UnitActions Unit)
-    {
-        if (Unit.isPoisoned == true)
-        {
-            Unit.unitHP -= 1;
-            Unit.unitPoisonCounter -= 1;
-            Debug.Log("Unit Poisoned for " + Unit.unitPoisonCounter + " more turns!");
-            if (Unit.unitPoisonCounter == 0)
-            {
-                Unit.isPoisoned = false;
-                Unit.unitPoisonCounter = 3;
-                Unit.unitStatus = "Normal";
-                Debug.Log("Congrats, your unit is NOT poisoned");
-            }
-        }
+        UserPlayerPrefab.GetComponent<UnitActionsPlayer>().StopEverything();
     }
 
     void generateMapFromFile(string name)
@@ -304,7 +223,7 @@ public class GameManager : MonoBehaviour
                         break;
                 }
 
-                GameObject block = Instantiate(tilePrefab, position, rotation) as GameObject;
+				GameObject block = Instantiate(tilePrefab, position, rotation) as GameObject;
                 Tile tile = block.GetComponent<Tile>();
 
                 switch (env)        // Create block based on height, type
@@ -317,8 +236,8 @@ public class GameManager : MonoBehaviour
                         break;
                     case "grass":
                         tile.setEnvironment("grass");
-                        GameObject bsh = Instantiate(decoBush, position, rotation) as GameObject;
-                        break;
+						GameObject bsh = Instantiate(decoBush, position, rotation) as GameObject;
+						break;
                     case "plains":
                         tile.setEnvironment("plains");
                         break;
@@ -344,11 +263,6 @@ public class GameManager : MonoBehaviour
         Debug.Log(mapcenterY);
         Debug.Log(mapCenter);
         Debug.Log(groundPlane.transform.position);
-
-        //set camera position to the center of the map
-        //maybe do something like this whenever the controlling team switches, set camera position to average
-        // position of the new team
-        GameObject.Find("CameraCenter").transform.position = new Vector3(mapcenterX, 0, mapcenterY);
 
         Instantiate(groundPlane, mapCenter, Quaternion.Euler(new Vector3()));
 
@@ -419,9 +333,6 @@ public class GameManager : MonoBehaviour
         player.gridPosition = new Vector2(MapHeight - 1, 2);
         player.setStats(player, "Knight");
         player.unitName = "Sir William";
-        player.MovementJump = 0.5f;
-        player.AttackRange = 2;
-        player.MovementTiles = 8;
 
         team2.myRoster.Add(player);
 
