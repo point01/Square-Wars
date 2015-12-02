@@ -7,4 +7,5 @@ public class Team {
 	
 	public List<UnitActions> myRoster = new List<UnitActions>();
 	public string teamName;
+
 }
