@@ -15,12 +15,12 @@ public class UnitActions : MonoBehaviour
 
     public ModelUnit unit = new ModelUnit();
     public Vector3 moveDestination;
-    public Tile DestinationTile;
+    public Tile currentUnitTile;
     public float moveSpeed;
     public System.Collections.Generic.Queue<Tile> moveQueue;
 
-    public bool moving = false;
-    public bool attacking = false;
+    public bool CanMove;
+    public bool CanAttack;
     public bool isAlive
     {
         get { return unitHP > 0; }
@@ -37,9 +37,10 @@ public class UnitActions : MonoBehaviour
     }
 
     public string unitName;
-    public string unitType;
+    public string unitClass;
     public string unitLore;
     public string unitStatus;
+    public string unitType;
     public int unitAGI;
     public int unitHP;
     public int MovementTiles;
@@ -52,8 +53,8 @@ public class UnitActions : MonoBehaviour
     public int unitMAG;
     public int unitMDF;
     public float damageRollSides = 6; //d6
-
-    public int actionPoints = 2;
+    public int unitPoisonCounter = 3;
+    public bool isPoisoned = false;
 
     //List of stats
     List<string> tempList = new List<string>();
@@ -65,13 +66,11 @@ public class UnitActions : MonoBehaviour
 
     public virtual void TurnUpdate()
     {
-
-        if (actionPoints <= 0)
+        if ((!CanMove) && (!CanAttack))
         {
-            actionPoints = 2;
-            moving = false;
-            attacking = false;
             GameManager.instance.nextTurn();
+            //  if (unitStatus.Equals("Poison"))
+            //      unitPoisonCounter -= 1;
         }
         updateStatus();
     }
@@ -80,11 +79,28 @@ public class UnitActions : MonoBehaviour
     {
         ModelUnit bu;
 
+        if (unitClass.Equals("King"))
+        {
+            bu = new ModelKing();
+            player.unitName = bu.UnitClassName;
+            player.unitClass = bu.UnitClassType;
+            player.unitLore = bu.UnitClassLore;
+            player.unitHP = bu.UnitClassHP;
+            player.unitSTR = bu.UnitClassSTR;
+            player.unitDEF = bu.UnitClassDEF;
+            player.unitMAG = bu.UnitClassMAG;
+            player.unitMDF = bu.UnitClassMDF;
+            player.MovementTiles = bu.UnitClassSPD;
+            player.AttackRange = 1;
+            player.unitAGI = bu.UnitClassAGI;
+            player.unitStatus = "Normal";
+        }
+
         if (unitClass.Equals("Soldier"))
         {
             bu = new ModelSoldier();
             player.unitName = bu.UnitClassName;
-            player.unitType = bu.UnitClassType;
+            player.unitClass = bu.UnitClassType;
             player.unitLore = bu.UnitClassLore;
             player.unitHP = bu.UnitClassHP;
             player.unitSTR = bu.UnitClassSTR;
@@ -101,7 +117,7 @@ public class UnitActions : MonoBehaviour
         {
             bu = new ModelKnight();
             player.unitName = bu.UnitClassName;
-            player.unitType = bu.UnitClassType;
+            player.unitClass = bu.UnitClassType;
             player.unitLore = bu.UnitClassLore;
             player.unitHP = bu.UnitClassHP;
             player.unitSTR = bu.UnitClassSTR;
@@ -118,7 +134,7 @@ public class UnitActions : MonoBehaviour
         {
             bu = new ModelMage();
             player.unitName = bu.UnitClassName;
-            player.unitType = bu.UnitClassType;
+            player.unitClass = bu.UnitClassType;
             player.unitLore = bu.UnitClassLore;
             player.unitHP = bu.UnitClassHP;
             player.unitSTR = bu.UnitClassSTR;
@@ -135,7 +151,7 @@ public class UnitActions : MonoBehaviour
         {
             bu = new ModelCavalier();
             player.unitName = bu.UnitClassName;
-            player.unitType = bu.UnitClassType;
+            player.unitClass = bu.UnitClassType;
             player.unitLore = bu.UnitClassLore;
             player.unitHP = bu.UnitClassHP;
             player.unitSTR = bu.UnitClassSTR;
@@ -202,7 +218,7 @@ public class UnitActions : MonoBehaviour
     {
         int damage;
 
-        if (attacker.unitType.Equals("Mage"))
+        if (attacker.unitClass != null && attacker.unitClass.Equals("Mage"))
         {
             damage = attacker.unitMAG - defender.unitMDF;
         }
@@ -215,15 +231,25 @@ public class UnitActions : MonoBehaviour
         return damage;
     }
 
-    public void setUnitStatus()
+    public void setUnitStatus(UnitActions unit)
     {
-        //this will have the proper status changes one day
+        if (unit.unitStatus.Equals("Normal"))
+        {
+
+        }
+
+        if (unit.unitStatus.Equals("Poison"))
+        {
+            unit.isPoisoned = true;
+        }
     }
 
     public virtual void TurnOnGUI()
     {
 
     }
+
+
 
 
 
@@ -234,14 +260,14 @@ public class UnitActions : MonoBehaviour
         tempList.Clear();
         //Add all stats that want to be displayed
         tempList.Add("Name: " + unitName);
-        tempList.Add("Type: " + unitType);
+        tempList.Add("Type: " + unitClass);
         tempList.Add("Status: " + unitStatus);
         tempList.Add("HP: " + unitHP.ToString());
         tempList.Add("Atk Dmg: " + unitSTR.ToString());
         tempList.Add("Def: " + unitDEF.ToString());
         tempList.Add("Magic Dmg: " + unitMAG.ToString());
         tempList.Add("Mag Def: " + unitMDF.ToString());
-        tempList.Add("AP: " + actionPoints.ToString());
+        //        tempList.Add("AP: " + actionPoints.ToString());
 
         //Update UI static variable
         UnitInfo.unitInfo = tempList;
