@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class AIControl
+public class AIControl : MonoBehaviour
 {
 
     private static bool hasAttacked = false;
@@ -11,16 +11,49 @@ public class AIControl
 
     public static void controlAI()
     {
-        // Attack
-        attackAI();
-        // Move
-        move();
+
+        switch (MenuScript.currentDifficulty)
+        {
+            case "Easy":
+                easyAttackAI();
+                break;
+            case "Medium":
+                mediumAttackAI();
+                break;
+            case "Hard":
+                hardAttackAI();
+                break;
+        }
+
+        switch (MenuScript.currentDifficulty)
+        {
+            case "Easy":
+                easyMove();
+                break;
+            case "Medium":
+                mediumMove();
+                break;
+            case "Hard":
+                hardMove();
+                break;
+        }
 
         //Check if the unit attacked first
         //this won't actually work since it runs before the unit finishes movement
         if (GameManager.CurrentTurnPlayer.CanAttack)
         {
-            attackAI();
+            switch (MenuScript.currentDifficulty)
+            {
+                case "Easy":
+                    easyAttackAI();
+                    break;
+                case "Medium":
+                    mediumAttackAI();
+                    break;
+                case "Hard":
+                    hardAttackAI();
+                    break;
+            }
         }
         endTurnAI();
 
@@ -36,7 +69,89 @@ public class AIControl
 
     }
 
-    private static void attackAI()
+    private static void easyAttackAI()
+    {
+        //Tiles that unit can attack
+        List<Tile> attackTiles = Movement.GetAttack(GameManager.CurrentTurnPlayer);
+        UnitActionsPlayer.AttackList = attackTiles;
+        List<UnitActions> possibleTargets = new List<UnitActions>();
+
+        //Get all the possible enemies to attack
+        //Go through all the possible attack tiles
+        for (int a = 0; GameManager.CurrentTurnPlayer.CanAttack && a < attackTiles.Count; ++a)
+        {
+            //Find any and all enemies in the possible attack tiles and add them to a list of possible targets
+            foreach (UnitActions p in GameManager.enemyTeam.myRoster)
+            {
+                if (p.gridPosition == attackTiles[a].gridPosition && p.isAlive)
+                {
+                    possibleTargets.Add(p);
+                }
+            }
+        }
+
+        //Pick a target and attack
+        //Check if there are possible targets
+        if (possibleTargets.Count > 0)
+        {
+            UnitActions target = possibleTargets[0];
+            foreach (UnitActions p in possibleTargets)
+            {
+                if (p.unitHP < target.unitHP)
+                {
+                    target = p;
+                }
+            }
+            //Attack target
+            GameManager.attackWithCurrentPlayer(Movement.GetTileFromPlayer(target));
+            hasAttacked = true;
+        }
+
+
+    }
+
+    private static void mediumAttackAI()
+    {
+        //Tiles that unit can attack
+        List<Tile> attackTiles = Movement.GetAttack(GameManager.CurrentTurnPlayer);
+        UnitActionsPlayer.AttackList = attackTiles;
+        List<UnitActions> possibleTargets = new List<UnitActions>();
+
+        //Get all the possible enemies to attack
+        //Go through all the possible attack tiles
+        for (int a = 0; GameManager.CurrentTurnPlayer.CanAttack && a < attackTiles.Count; ++a)
+        {
+            //Find any and all enemies in the possible attack tiles and add them to a list of possible targets
+            foreach (UnitActions p in GameManager.enemyTeam.myRoster)
+            {
+                if (p.gridPosition == attackTiles[a].gridPosition && p.isAlive)
+                {
+                    possibleTargets.Add(p);
+                }
+            }
+        }
+
+        //Pick a target and attack
+        //Check if there are possible targets
+        if (possibleTargets.Count > 0)
+        {
+            UnitActions target = possibleTargets[0];
+            foreach (UnitActions p in possibleTargets)
+            {
+                if (p.unitHP < target.unitHP)
+                {
+                    target = p;
+                }
+            }
+            //Attack target
+            GameManager.attackWithCurrentPlayer(Movement.GetTileFromPlayer(target));
+            hasAttacked = true;
+        }
+
+
+    }
+
+    private static void hardAttackAI()
     {
         //Tiles that unit can attack
         List<Tile> attackTiles = Movement.GetAttack(GameManager.CurrentTurnPlayer);
@@ -78,7 +193,7 @@ public class AIControl
     }
 
 
-    private static void move()
+    private static void easyMove()
     {
 
         //Generate the movement tree of the currentplayer
@@ -110,6 +225,78 @@ public class AIControl
         // Tell unit to move to tileChoice
         //GameManager.CurrentTurnPlayer.CanMove = false;
     }
+
+
+    private static void mediumMove()
+    {
+
+        //Generate the movement tree of the currentplayer
+        Movement.GenerateMovementTree(GameManager.CurrentTurnPlayer);
+        //
+        UnitActions target = null;
+        int currentTargetDistance = 9999;
+
+        // Choose which tile to go to
+        // TODO : Check if movementTiles + attackRange can reach an opponent
+        foreach (UnitActions p in GameManager.enemyTeam.myRoster)
+        {
+            if (p.isAlive)
+            {
+                int tempDist = Movement.GetDistance(Movement.GetTileFromPlayer(p), Movement.GetTileFromPlayer(GameManager.CurrentTurnPlayer));
+                // Check if the currentTargetDistance is closer than the previous
+                if (tempDist < currentTargetDistance)
+                {
+                    currentTargetDistance = tempDist;
+                    target = p;
+                }
+            }
+        }
+        if (target != null)
+            moveTowardsUnit(target);
+        else
+            GameManager.CurrentTurnPlayer.CanMove = false;
+        // Check distance between movementTiles and enemy. Move to closest tile.
+        // Tell unit to move to tileChoice
+        //GameManager.CurrentTurnPlayer.CanMove = false;
+    }
+
+
+
+    private static void hardMove()
+    {
+
+        //Generate the movement tree of the currentplayer
+        Movement.GenerateMovementTree(GameManager.CurrentTurnPlayer);
+        //
+        UnitActions target = null;
+        int currentTargetDistance = 9999;
+
+        // Choose which tile to go to
+        // TODO : Check if movementTiles + attackRange can reach an opponent
+        foreach (UnitActions p in GameManager.enemyTeam.myRoster)
+        {
+            if (p.isAlive)
+            {
+                int tempDist = Movement.GetDistance(Movement.GetTileFromPlayer(p), Movement.GetTileFromPlayer(GameManager.CurrentTurnPlayer));
+                // Check if the currentTargetDistance is closer than the previous
+                if (tempDist < currentTargetDistance)
+                {
+                    currentTargetDistance = tempDist;
+                    target = p;
+                }
+            }
+        }
+        if (target != null)
+            moveTowardsUnit(target);
+        else
+            GameManager.CurrentTurnPlayer.CanMove = false;
+        // Check distance between movementTiles and enemy. Move to closest tile.
+        // Tell unit to move to tileChoice
+        //GameManager.CurrentTurnPlayer.CanMove = false;
+    }
+
+
+
 
 
     public static void moveTowardsUnit(UnitActions target)

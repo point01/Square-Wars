@@ -15,6 +15,7 @@ public class MenuScript : MonoBehaviour {
     //Game mode UI elements
     public Canvas gameModeCanvas;
     public Dropdown difficultDropDown;
+    public static string currentDifficulty;
     public Dropdown turnTimerDropDown;
     public Button nextToMap;
     public Button backToMain;
@@ -68,6 +69,7 @@ public class MenuScript : MonoBehaviour {
         currentMap = currentMap.GetComponent<Image>();
         nextToChooseTeam = nextToChooseTeam.GetComponent<Button>();
         backToGameMode = backToGameMode.GetComponent<Button>();
+        currentDifficulty = "Easy";
         chooseMapCanvas.enabled = false;
 
         //Choose Team
@@ -159,6 +161,10 @@ public class MenuScript : MonoBehaviour {
     }
 
     //TODO: In game mode difficulty drop down
+    public void selectDIfficulty()
+    {
+        currentDifficulty = difficultDropDown.options[difficultDropDown.value].text;
+    }
 
     //TODO: In game mode turn timer drop down
 
