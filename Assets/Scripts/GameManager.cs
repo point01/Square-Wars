@@ -48,6 +48,9 @@ public class GameManager : MonoBehaviour
     static public int team1TurnNum;
     static public int team2TurnNum;
 
+    //GameObject menu = new GameObject("MenuScript");
+    //List<String> test = new List<String>();
+
     void Awake()
     {
         instance = this;
@@ -83,7 +86,17 @@ public class GameManager : MonoBehaviour
         team1TurnNum = 1;
         team2TurnNum = 0;
         //  AITurn = false;
-
+        //MenuScript menu = new MenuScript();
+        //menu = GameObject.Find("MenuScript");
+        /*if (menu == null)
+            Debug.Log("It's null son");
+        else
+        {
+            //foreach (string s in menu.currentTeamList)
+            //{
+            Debug.Log("Select: ");// + s);
+           // }
+        }*/
 
     }
 
@@ -169,6 +182,10 @@ public class GameManager : MonoBehaviour
                     {
                         a.CanMove = true;
                         a.CanAttack = true;
+                    }
+                    if(a.unitClass.Equals("King") && !a.isAlive)
+                    {
+                        endGame();
                     }
                 }
             }
@@ -390,8 +407,7 @@ public class GameManager : MonoBehaviour
 
 
         //Still can't seem to get the items from the team list from the Menu
-        //MenuScript menu = new MenuScript();
-        //Debug.Log("You Selected 1: " + menu.CurrentTeamList[0]);
+
 
         Vector3 position = new Vector3(1, 1.5f, (MapHeight / 2));
         Quaternion rotation = Quaternion.Euler(new Vector3());
