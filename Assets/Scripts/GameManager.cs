@@ -131,6 +131,7 @@ public class GameManager : MonoBehaviour
                 if ((currentTeam.myRoster[i].CanMove || currentTeam.myRoster[i].CanAttack) && currentTeam.myRoster[i].isAlive)
                 {
                     turndone = false;
+                    checkStatus(currentTeam.myRoster[currentPlayerIndex]);
                 }
             }
             --i;
@@ -347,6 +348,36 @@ public class GameManager : MonoBehaviour
         freezeGame = true;
     }
 
+    public void checkStatus(UnitActions Unit)
+    {
+        if (Unit.isPoisoned == true)
+        {
+            Unit.unitHP -= 1;
+            Unit.unitPoisonCounter -= 1;
+            Debug.Log("Unit Poisoned for " + Unit.unitPoisonCounter + " more turns!");
+            if (Unit.unitPoisonCounter == 0)
+            {
+                Unit.isPoisoned = false;
+                Unit.unitPoisonCounter = 3;
+                Unit.unitStatus = "Normal";
+                Debug.Log("Congrats, your unit is NOT poisoned");
+            }
+        }
+    }
+
+    public UnitActionsPlayer createUnit(Vector3 position, Quaternion rotation, Vector2 gridPosition, String unitClass, Boolean isAI, String name)
+    {
+        UnitActionsPlayer unit = ((GameObject)Instantiate(UserPlayerPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
+        unit.gridPosition = gridPosition;
+        unit.setStats(unit, unitClass);
+        unit.MovementJump = 0.5f;
+        if (isAI == true)
+            unit.unitType = "AI";
+        unit.unitName = name;
+
+        return unit;
+    }
+
     void generatePlayers()
     {
         UnitActionsPlayer player;
@@ -357,73 +388,84 @@ public class GameManager : MonoBehaviour
         team1.teamName = "Team1";
         team2.teamName = "Team2";
 
-        // TODO
-        // The following code can be adapted into a "create unit" method
-        // Which can then be adapted into future versions that include
-        // team creation mode. Also keeps us from repeating ourselves too much
-        // Pass in a position and unit type as a parameter, then add to roster
-        // GeneratePlayers then, for now, would be simply six calls to this function.
+
+        //Still can't seem to get the items from the team list from the Menu
+        //MenuScript menu = new MenuScript();
+        //Debug.Log("You Selected 1: " + menu.CurrentTeamList[0]);
 
         Vector3 position = new Vector3(1, 1.5f, (MapHeight / 2));
         Quaternion rotation = Quaternion.Euler(new Vector3());
+        Vector2 gridPosition = new Vector2(1, (MapHeight / 2));
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
-        player.gridPosition = new Vector2(1, (MapHeight / 2));
-        player.setStats(player, "Soldier");
-        player.MovementJump = 0.5f;
-        player.unitType = "AI";
 
+        player = createUnit(position, rotation, gridPosition, "Soldier", true, "Bob");
         team1.myRoster.Add(player);
 
         // end snippet
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1, 1.5f, (MapHeight / 2 - 1)), Quaternion.Euler(new Vector3()))).GetComponent<UnitActionsPlayer>();
-        player.gridPosition = new Vector2(1, (MapHeight / 2 - 1));
-        player.setStats(player, "Mage");
-        player.unitName = "Kyle";
-        player.MovementJump = 0.5f;
-        player.unitType = "AI";
+        position = new Vector3(1, 1.5f, (MapHeight / 2 - 1));
+        rotation = Quaternion.Euler(new Vector3());
+        gridPosition = new Vector2(1, (MapHeight / 2 - 1));
 
 
+        player = createUnit(position, rotation, gridPosition, "Mage", true, "Kyle");
         team1.myRoster.Add(player);
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3(1, 1.5f, (MapHeight / 2 + 1)), Quaternion.Euler(new Vector3()))).GetComponent<UnitActionsPlayer>();
-        player.gridPosition = new Vector2(1, (MapHeight / 2 + 1));
-        player.setStats(player, "Cavalier");
-        player.unitName = "Lars";
-        player.MovementJump = 0.5f;
-        player.unitType = "AI";
+        position = new Vector3(1, 1.5f, (MapHeight / 2 + 3));
+        rotation = Quaternion.Euler(new Vector3());
+        gridPosition = new Vector2(1, (MapHeight / 2 + 3));
 
-
+        player = createUnit(position, rotation, gridPosition, "Cavalier", true, "Lars");
         team1.myRoster.Add(player);
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((MapWidth - 1), 1.5f, -1 + Mathf.Floor(MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UnitActionsPlayer>();
-        player.gridPosition = new Vector2(MapHeight - 1, 1);
-        player.setStats(player, "Soldier");
-        player.unitName = "Steve";
-        player.AttackRange = 5;
-        player.MovementTiles = 3;
-        player.MovementJump = 0.5f;
+        position = new Vector3(1, 1.5f, (MapHeight / 2 + 2));
+        rotation = Quaternion.Euler(new Vector3());
+        gridPosition = new Vector2(1, (MapHeight / 2 + 2));
+
+        player = createUnit(position, rotation, gridPosition, "Knight", true, "Gary");
+        team1.myRoster.Add(player);
+
+        position = new Vector3(1, 1.5f, (MapHeight / 2 + 1));
+        rotation = Quaternion.Euler(new Vector3());
+        gridPosition = new Vector2(1, (MapHeight / 2 + 1));
+
+        player = createUnit(position, rotation, gridPosition, "King", true, "Henry");
+        team1.myRoster.Add(player);
 
 
+        position = new Vector3((MapWidth - 1), 1.5f, -1 + Mathf.Floor(MapHeight / 2));
+        rotation = Quaternion.Euler(new Vector3());
+        gridPosition = new Vector2(MapWidth - 1, 1);
+
+        player = createUnit(position, rotation, gridPosition, "Soldier", false, "Steve");
         team2.myRoster.Add(player);
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((MapWidth - 1), 1.5f, -2 + Mathf.Floor(MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UnitActionsPlayer>();
-        player.gridPosition = new Vector2(MapHeight - 1, 2);
-        player.setStats(player, "Knight");
-        player.unitName = "Sir William";
-        player.MovementJump = 0.5f;
-        player.AttackRange = 2;
-        player.MovementTiles = 8;
+        position = new Vector3((MapWidth - 1), 1.5f, -2 + Mathf.Floor(MapHeight / 2));
+        rotation = Quaternion.Euler(new Vector3());
+        gridPosition = new Vector2(MapWidth - 1, 2);
 
+        player = createUnit(position, rotation, gridPosition, "Cavalier", false, "Tyler");
         team2.myRoster.Add(player);
 
-        player = ((GameObject)Instantiate(UserPlayerPrefab, new Vector3((MapWidth - 1), 1.5f, -3 + Mathf.Floor(MapHeight / 2)), Quaternion.Euler(new Vector3()))).GetComponent<UnitActionsPlayer>();
-        player.gridPosition = new Vector2(MapHeight - 1, 3);
-        player.setStats(player, "Cavalier");
-        player.unitName = "Tyler";
-        player.MovementJump = 0.5f;
+        position = new Vector3((MapWidth - 1), 1.5f, -3 + Mathf.Floor(MapHeight / 2));
+        rotation = Quaternion.Euler(new Vector3());
+        gridPosition = new Vector2(MapWidth - 1, 3);
 
+        player = createUnit(position, rotation, gridPosition, "King", false, "Aziz");
+        team2.myRoster.Add(player);
+
+        position = new Vector3((MapWidth - 1), 1.5f, -4 + Mathf.Floor(MapHeight / 2));
+        rotation = Quaternion.Euler(new Vector3());
+        gridPosition = new Vector2(MapWidth - 1, 4);
+
+        player = createUnit(position, rotation, gridPosition, "Knight", false, "Sir William");
+        team2.myRoster.Add(player);
+
+        position = new Vector3((MapWidth - 1), 1.5f, -5 + Mathf.Floor(MapHeight / 2));
+        rotation = Quaternion.Euler(new Vector3());
+        gridPosition = new Vector2(MapWidth - 1, 5);
+
+        player = createUnit(position, rotation, gridPosition, "Mage", false, "Nathan");
         team2.myRoster.Add(player);
     }
 }
