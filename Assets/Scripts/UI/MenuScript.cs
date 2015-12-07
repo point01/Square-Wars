@@ -293,7 +293,13 @@ public class MenuScript : MonoBehaviour {
         }
         selectedUnit = "";
     }
-    
+
+    public List<string> CurrentTeamList
+    {
+        get { return currentTeamList; }
+        set { currentTeamList = value; }
+    }
+
     void updateCurrentTeam()
     {
         //Convert the List to a String
