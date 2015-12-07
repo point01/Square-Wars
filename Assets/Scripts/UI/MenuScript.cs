@@ -86,8 +86,9 @@ public class MenuScript : MonoBehaviour {
         teamCostText = teamCostText.GetComponent<Text>();
         selectedUnit = "";
 
-        teamCostText.text = teamCost.ToString();  
+        teamCostText.text = teamCost.ToString();
 
+        currentTeamList = new List<string>();
     }
 
     void Update()
