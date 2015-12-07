@@ -86,8 +86,9 @@ public class MenuScript : MonoBehaviour {
         teamCostText = teamCostText.GetComponent<Text>();
         selectedUnit = "";
 
-        teamCostText.text = teamCost.ToString();  
+        teamCostText.text = teamCost.ToString();
 
+        currentTeamList = new List<string>();
     }
 
     void Update()
@@ -293,7 +294,13 @@ public class MenuScript : MonoBehaviour {
         }
         selectedUnit = "";
     }
-    
+
+    public List<string> CurrentTeamList
+    {
+        get { return currentTeamList; }
+        set { currentTeamList = value; }
+    }
+
     void updateCurrentTeam()
     {
         //Convert the List to a String
