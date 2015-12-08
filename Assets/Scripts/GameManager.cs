@@ -73,7 +73,6 @@ public class GameManager : MonoBehaviour
     {
         // Load map and set related decorations
         generateMapFromFile("Maps/example1");
-
         //Place units on board
         //This will later include a call to manual unit placement function
         //once it is made
@@ -97,7 +96,10 @@ public class GameManager : MonoBehaviour
             Debug.Log("Select: ");// + s);
            // }
         }*/
-
+        for (int i = 0; i<MenuScript.currentTeamList.Count; i++)
+        {
+            Debug.Log("Unit: " + MenuScript.currentTeamList[i]);
+        }
     }
 
     // Update is called once per frame
@@ -183,10 +185,10 @@ public class GameManager : MonoBehaviour
                         a.CanMove = true;
                         a.CanAttack = true;
                     }
-                    if(a.unitClass.Equals("King") && !a.isAlive)
+                    /*if(a.unitClass.Equals("King") && !a.isAlive)
                     {
                         endGame();
-                    }
+                    }*/
                 }
             }
             UnitActionsPlayer.MoveList = null;
@@ -398,7 +400,6 @@ public class GameManager : MonoBehaviour
     void generatePlayers()
     {
         UnitActionsPlayer player;
-        ModelUnit baseUnit = new ModelSoldier();
         currentTeam = team1;
         enemyTeam = team2;
         //Set up Team stats
@@ -414,7 +415,7 @@ public class GameManager : MonoBehaviour
         Vector2 gridPosition = new Vector2(1, (MapHeight / 2));
 
 
-        player = createUnit(position, rotation, gridPosition, "Soldier", true, "Bob");
+        player = createUnit(position, rotation, gridPosition, MenuScript.currentTeamList[0], true, "Bob");
         team1.myRoster.Add(player);
 
         // end snippet
@@ -448,8 +449,15 @@ public class GameManager : MonoBehaviour
         player = createUnit(position, rotation, gridPosition, "King", true, "Henry");
         team1.myRoster.Add(player);
 
-
-        position = new Vector3((MapWidth - 1), 1.5f, -1 + Mathf.Floor(MapHeight / 2));
+        for(int i = 1; i <= MenuScript.currentTeamList.Count; i++)
+        {
+            position = new Vector3((MapWidth - 1), 1.5f, -i + Mathf.Floor(MapHeight / 2));
+            rotation = Quaternion.Euler(new Vector3());
+            gridPosition = new Vector2(MapWidth - 1, i);
+            player = createUnit(position, rotation, gridPosition, MenuScript.currentTeamList[i - 1], false, "Player " + i);
+            team2.myRoster.Add(player);
+        }
+        /*position = new Vector3((MapWidth - 1), 1.5f, -1 + Mathf.Floor(MapHeight / 2));
         rotation = Quaternion.Euler(new Vector3());
         gridPosition = new Vector2(MapWidth - 1, 1);
 
@@ -482,6 +490,6 @@ public class GameManager : MonoBehaviour
         gridPosition = new Vector2(MapWidth - 1, 5);
 
         player = createUnit(position, rotation, gridPosition, "Mage", false, "Nathan");
-        team2.myRoster.Add(player);
+        team2.myRoster.Add(player);*/
     }
 }
