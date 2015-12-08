@@ -37,10 +37,11 @@ public class MenuScript : MonoBehaviour {
     public Button unit4Button;
     public Button addUnitButton;
     public Text currentTeam;
-    public List<string> currentTeamList;
+    public static List<string> currentTeamList;
     public string selectedUnit;
     public int teamCost;
     public Text teamCostText;
+    public static string test = "test";
 
 
     // Use this for initialization
@@ -89,6 +90,7 @@ public class MenuScript : MonoBehaviour {
         teamCostText.text = teamCost.ToString();
 
         currentTeamList = new List<string>();
+        currentTeamList.Add("King");
     }
 
     void Update()
