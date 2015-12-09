@@ -69,8 +69,6 @@ public class UnitActions : MonoBehaviour
         if ((!CanMove) && (!CanAttack))
         {
             GameManager.instance.nextTurn();
-            //  if (unitStatus.Equals("Poison"))
-            //      unitPoisonCounter -= 1;
         }
         updateStatus();
     }
