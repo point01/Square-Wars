@@ -38,6 +38,7 @@ public class MenuScript : MonoBehaviour {
     public Button addUnitButton;
     public Text currentTeam;
     public static List<string> currentTeamList;
+    public static List<string> currentTeamNameList;
     public string selectedUnit;
     public int teamCost;
     public Text teamCostText;
@@ -91,6 +92,9 @@ public class MenuScript : MonoBehaviour {
 
         currentTeamList = new List<string>();
         currentTeamList.Add("King");
+
+        currentTeamNameList = new List<string>();
+        currentTeamNameList.Add("King");
     }
 
     void Update()
@@ -219,15 +223,12 @@ public class MenuScript : MonoBehaviour {
     public void unit1ButtonPress()
     {
         selectedUnit = "Knight";
-        Debug.Log(teamCost.ToString());
-        Debug.Log(selectedUnit);
     }
 
     //Unit2 Button is pressed
     public void unit2ButtonPress()
     {
        selectedUnit = "Mage";
-        Debug.Log(selectedUnit);
 
 
     }
@@ -236,7 +237,6 @@ public class MenuScript : MonoBehaviour {
     public void unit3ButtonPress()
     {        
         selectedUnit = "Soldier";
-        Debug.Log(selectedUnit);
 
     }
 
@@ -244,14 +244,12 @@ public class MenuScript : MonoBehaviour {
     public void unit4ButtonPress()
     {
         selectedUnit = "Cavalier";
-        Debug.Log(selectedUnit);
 
     }
 
     // Add Unit button is pressed
     public void addUnitButtonPress()
     {
-		Debug.Log (selectedUnit);
         if(selectedUnit != "" && teamCost > 0)
         {
             switch (selectedUnit)
@@ -261,7 +259,7 @@ public class MenuScript : MonoBehaviour {
                     {
                         teamCost = teamCost - 2;
                         currentTeamList.Add(selectedUnit);
-						Debug.Log("Here bitch");
+                        currentTeamNameList.Add(selectedUnit);
                         updateCurrentTeam();
                     }
                     break;
@@ -269,6 +267,7 @@ public class MenuScript : MonoBehaviour {
                     if (teamCost >= 2)
                     {
                         currentTeamList.Add(selectedUnit);
+                        currentTeamNameList.Add(selectedUnit);
                         teamCost = teamCost - 2;
                         updateCurrentTeam();
                     }
@@ -277,6 +276,7 @@ public class MenuScript : MonoBehaviour {
                     if (teamCost >= 1)
                     {
                         currentTeamList.Add(selectedUnit);
+                        currentTeamNameList.Add(selectedUnit);
                         teamCost = teamCost - 1;
                         updateCurrentTeam();
                     }
@@ -286,6 +286,7 @@ public class MenuScript : MonoBehaviour {
                     if(teamCost >= 3)
                     {
                         currentTeamList.Add(selectedUnit);
+                        currentTeamNameList.Add(selectedUnit);
                         teamCost = teamCost - 3;
                         updateCurrentTeam();
                     }
@@ -306,7 +307,7 @@ public class MenuScript : MonoBehaviour {
     void updateCurrentTeam()
     {
         //Convert the List to a String
-		Debug.Log ("Fucked up");
+
         string info = string.Join("\n", currentTeamList.ToArray());
         //Display the updated info
         currentTeam.text = info;

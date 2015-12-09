@@ -119,7 +119,6 @@ public class GameManager : MonoBehaviour
         //Check if game going
         if (!gameOver || !freezeGame)
         {
-            // Debug.Log(currentPlayerIndex.ToString());
             //UserPlayerPrefab.GetComponent<UnitActionsPlayer>().StopEverything();
             Movement.UnPaintTiles();
 
@@ -151,13 +150,11 @@ public class GameManager : MonoBehaviour
                         currentTeam = team2;
                         enemyTeam = team1;
                         team2TurnNum++;
-                        Debug.Log("Team 2 Turn Number: " + team2TurnNum);
                         break;
                     case "Team2":
                         currentTeam = team1;
                         enemyTeam = team2;
                         team1TurnNum++;
-                        Debug.Log("Team 1 Turn Number: " + team1TurnNum);
                         break;
                     default:
                         break;
@@ -224,7 +221,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Target is not in range!");
+                //Debug.Log("Target is not in range!");
             }
         }
         //        UserPlayerPrefab.GetComponent<UnitActionsPlayer>().StopEverything();
@@ -236,13 +233,11 @@ public class GameManager : MonoBehaviour
         {
             Unit.unitHP -= 1;
             Unit.unitPoisonCounter -= 1;
-            Debug.Log("Unit Poisoned for " + Unit.unitPoisonCounter + " more turns!");
             if (Unit.unitPoisonCounter == 0)
             {
                 Unit.isPoisoned = false;
                 Unit.unitPoisonCounter = 3;
                 Unit.unitStatus = "Normal";
-                Debug.Log("Congrats, your unit is NOT poisoned");
             }
         }
     }
@@ -331,10 +326,6 @@ public class GameManager : MonoBehaviour
         mapCenter = new Vector3(mapcenterX, 0.0f, mapcenterY);
         groundPlane.transform.position = mapCenter;
 
-        Debug.Log(mapcenterX);
-        Debug.Log(mapcenterY);
-        Debug.Log(mapCenter);
-        Debug.Log(groundPlane.transform.position);
 
         //set camera position to the center of the map
         //maybe do something like this whenever the controlling team switches, set camera position to average
@@ -358,13 +349,11 @@ public class GameManager : MonoBehaviour
         {
             Unit.unitHP -= 1;
             Unit.unitPoisonCounter -= 1;
-            Debug.Log("Unit Poisoned for " + Unit.unitPoisonCounter + " more turns!");
             if (Unit.unitPoisonCounter == 0)
             {
                 Unit.isPoisoned = false;
                 Unit.unitPoisonCounter = 3;
                 Unit.unitStatus = "Normal";
-                Debug.Log("Congrats, your unit is NOT poisoned");
             }
         }
     }
@@ -439,42 +428,8 @@ public class GameManager : MonoBehaviour
             position = new Vector3((MapWidth - 1), 1.5f, -i + Mathf.Floor(MapHeight / 2));
             rotation = Quaternion.Euler(new Vector3());
             gridPosition = new Vector2(MapWidth - 1, i);
-            player = createUnit(position, rotation, gridPosition, MenuScript.currentTeamList[i - 1], false, "Player " + i);
+            player = createUnit(position, rotation, gridPosition, MenuScript.currentTeamList[i - 1], false, MenuScript.currentTeamNameList[i-1]);
             team2.myRoster.Add(player);
         }
-        /*position = new Vector3((MapWidth - 1), 1.5f, -1 + Mathf.Floor(MapHeight / 2));
-        rotation = Quaternion.Euler(new Vector3());
-        gridPosition = new Vector2(MapWidth - 1, 1);
-
-        player = createUnit(position, rotation, gridPosition, "Soldier", false, "Steve");
-        team2.myRoster.Add(player);
-
-        position = new Vector3((MapWidth - 1), 1.5f, -2 + Mathf.Floor(MapHeight / 2));
-        rotation = Quaternion.Euler(new Vector3());
-        gridPosition = new Vector2(MapWidth - 1, 2);
-
-        player = createUnit(position, rotation, gridPosition, "Cavalier", false, "Tyler");
-        team2.myRoster.Add(player);
-
-        position = new Vector3((MapWidth - 1), 1.5f, -3 + Mathf.Floor(MapHeight / 2));
-        rotation = Quaternion.Euler(new Vector3());
-        gridPosition = new Vector2(MapWidth - 1, 3);
-
-        player = createUnit(position, rotation, gridPosition, "King", false, "Aziz");
-        team2.myRoster.Add(player);
-
-        position = new Vector3((MapWidth - 1), 1.5f, -4 + Mathf.Floor(MapHeight / 2));
-        rotation = Quaternion.Euler(new Vector3());
-        gridPosition = new Vector2(MapWidth - 1, 4);
-
-        player = createUnit(position, rotation, gridPosition, "Knight", false, "Sir William");
-        team2.myRoster.Add(player);
-
-        position = new Vector3((MapWidth - 1), 1.5f, -5 + Mathf.Floor(MapHeight / 2));
-        rotation = Quaternion.Euler(new Vector3());
-        gridPosition = new Vector2(MapWidth - 1, 5);
-
-        player = createUnit(position, rotation, gridPosition, "Mage", false, "Nathan");
-        team2.myRoster.Add(player);*/
     }
 }
