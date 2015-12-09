@@ -181,25 +181,19 @@ public class UnitActions : MonoBehaviour
         //If attacking unit has more AGI, it'll attack first
         if (attacker.unitAGI >= defender.unitAGI)
         {
-            Debug.Log("" + attacker.unitName + " attacked first!");
             defender.unitHP = defender.unitHP - attackerDamage;
-            Debug.Log("" + attacker.unitName + " attacked " + defender.unitName + " for " + attackerDamage + " damage!");
             if (defender.unitHP > 0)
             {
                 attacker.unitHP = attacker.unitHP - defenderDamage;
-                Debug.Log("" + defender.unitName + " attacked " + attacker.unitName + " for " + defenderDamage + " damage!");
             }
         }
         //If defending unit (non-attacking unit) has higher AGI, it will attack first
         else
         {
-            Debug.Log("" + defender.unitName + " attacked first!");
             attacker.unitHP = attacker.unitHP - defenderDamage;
-            Debug.Log("" + defender.unitName + " attacked " + attacker.unitName + " for " + defenderDamage + " damage!");
             if (attacker.unitHP > 0)
             {
                 defender.unitHP = defender.unitHP - attackerDamage;
-                Debug.Log("" + attacker.unitName + " attacked " + defender.unitName + " for " + attackerDamage + " damage!");
             }
         }
     }
