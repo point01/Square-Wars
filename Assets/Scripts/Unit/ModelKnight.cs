@@ -7,7 +7,7 @@ public class ModelKnight: ModelUnit
     public ModelKnight()
     {
         UnitClassName = "Knight";
-        UnitClassName = "Knight";
+        UnitClassType = "Knight";
         UnitClassLore = "Rook";
         UnitClassHP = 8;
         UnitClassSTR = 5;

@@ -45,7 +45,7 @@ public class Tile : MonoBehaviour
                 envType = EnvironmentType.Plains;
                 tileColor = new Color(195f / 255f, 5f / 255f, 55f / 255f, 1f);
                 isAccessible = true;
-                tileStatus = "Stoned #420";
+                //tileStatus = "Stoned #420";
                 break;
             case "grass":
                 envType = EnvironmentType.Grass;
@@ -57,7 +57,7 @@ public class Tile : MonoBehaviour
                 envType = EnvironmentType.Plains;
                 tileColor = new Color(210f / 255f, 170f / 255f, 40f / 255f, 1f);
                 isAccessible = true;
-                tileStatus = "Normal";
+                tileStatus = "Poison";
                 break;
             case "tallgrass":
                 envType = EnvironmentType.TallGrass;
@@ -93,19 +93,22 @@ public class Tile : MonoBehaviour
 		}
         */
     }
-	
-	void OnMouseExit() {
+
+
+    void OnMouseExit() {
 		//transform.GetComponent<Renderer>().material.color = Color.white;
 	}
 	
-	
+	//S_AI: Add in a check to make sure it's not an AI turn or the player will be able to control their units
 	void OnMouseDown() {
-		if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].moving && UnitActionsPlayer.MoveList.Contains(this)) {
-			GameManager.instance.moveCurrentPlayer(this);
+		if (UnitActionsPlayer.MoveList != null && GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].CanMove 
+            && UnitActionsPlayer.MoveList.Contains(this)) {
+			GameManager.moveCurrentPlayer(this);
             GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].unitStatus = tileStatus;
-            GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].setUnitStatus();
-        } else if (GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].attacking && UnitActionsPlayer.AttackList.Contains(this)) {
-			GameManager.instance.attackWithCurrentPlayer(this);
+            GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].setUnitStatus(GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex]);
+        } else if (UnitActionsPlayer.AttackList != null && GameManager.currentTeam.myRoster[GameManager.currentPlayerIndex].CanAttack 
+            && UnitActionsPlayer.AttackList.Contains(this)) {
+			GameManager.attackWithCurrentPlayer(this);
         }		
 		
 	}
