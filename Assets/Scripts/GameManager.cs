@@ -85,21 +85,6 @@ public class GameManager : MonoBehaviour
         team1TurnNum = 1;
         team2TurnNum = 0;
         //  AITurn = false;
-        //MenuScript menu = new MenuScript();
-        //menu = GameObject.Find("MenuScript");
-        /*if (menu == null)
-            Debug.Log("It's null son");
-        else
-        {
-            //foreach (string s in menu.currentTeamList)
-            //{
-            Debug.Log("Select: ");// + s);
-           // }
-        }*/
-        for (int i = 0; i<MenuScript.currentTeamList.Count; i++)
-        {
-            Debug.Log("Unit: " + MenuScript.currentTeamList[i]);
-        }
     }
 
     // Update is called once per frame
@@ -185,10 +170,10 @@ public class GameManager : MonoBehaviour
                         a.CanMove = true;
                         a.CanAttack = true;
                     }
-                    /*if(a.unitClass.Equals("King") && !a.isAlive)
+                    if(a.unitClass.Equals("King") && !a.isAlive)
                     {
                         endGame();
-                    }*/
+                    }
                 }
             }
             UnitActionsPlayer.MoveList = null;
