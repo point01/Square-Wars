@@ -8,7 +8,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    static public GameObject UserPlayerPrefab;
+    static public GameObject UserPlayerCavalierPrefab;
+    static public GameObject UserPlayerKingPrefab;
+    static public GameObject UserPlayerKnightPrefab;
+    static public GameObject UserPlayerMagePrefab;
+    static public GameObject UserPlayerSoldierPrefab;
     static public GameObject AIPlayerPrefab;
 
     // Teams
@@ -60,7 +64,11 @@ public class GameManager : MonoBehaviour
         TilePrefab_e0 = Resources.Load<GameObject>("Prefabs/Tile_e0");
         TilePrefab_e1 = Resources.Load<GameObject>("Prefabs/Tile_e1");
         TilePrefab_e2 = Resources.Load<GameObject>("Prefabs/Tile_e2");
-        UserPlayerPrefab = Resources.Load<GameObject>("Prefabs/UserPlayer");
+        UserPlayerCavalierPrefab = Resources.Load<GameObject>("Prefabs/UserCavalier");
+        UserPlayerKingPrefab = Resources.Load<GameObject>("Prefabs/UserKing");
+        UserPlayerKnightPrefab = Resources.Load<GameObject>("Prefabs/UserKnight");
+        UserPlayerMagePrefab = Resources.Load<GameObject>("Prefabs/UserMage");
+        UserPlayerSoldierPrefab = Resources.Load<GameObject>("Prefabs/UserSoldier");
         AIPlayerPrefab = Resources.Load<GameObject>("Prefabs/AIPlayer");
 
         // Decorations
@@ -360,15 +368,77 @@ public class GameManager : MonoBehaviour
 
     public UnitActionsPlayer createUnit(Vector3 position, Quaternion rotation, Vector2 gridPosition, String unitClass, Boolean isAI, String name)
     {
-        UnitActionsPlayer unit = ((GameObject)Instantiate(UserPlayerPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
-        unit.gridPosition = gridPosition;
-        unit.setStats(unit, unitClass);
-        unit.MovementJump = 0.5f;
-        if (isAI == true)
-            unit.unitType = "AI";
-        unit.unitName = name;
+        UnitActionsPlayer unit;
+        if (unitClass.Equals("Cavalier"))
+        {
+            unit = ((GameObject)Instantiate(UserPlayerCavalierPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
+            unit.gridPosition = gridPosition;
+            unit.setStats(unit, unitClass);
+            unit.MovementJump = 0.5f;
+            if (isAI == true)
+                unit.unitType = "AI";
+            unit.unitName = name;
 
-        return unit;
+            return unit;
+        }
+            
+        if (unitClass.Equals("King"))
+        {
+            unit = ((GameObject)Instantiate(UserPlayerKingPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
+            unit.gridPosition = gridPosition;
+            unit.setStats(unit, unitClass);
+            unit.MovementJump = 0.5f;
+            if (isAI == true)
+                unit.unitType = "AI";
+            unit.unitName = name;
+
+            return unit;
+        }
+            
+        if (unitClass.Equals("Knight"))
+        {
+            unit = ((GameObject)Instantiate(UserPlayerKnightPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
+            unit.gridPosition = gridPosition;
+            unit.setStats(unit, unitClass);
+            unit.MovementJump = 0.5f;
+            if (isAI == true)
+                unit.unitType = "AI";
+            unit.unitName = name;
+
+            return unit;
+        }
+            
+        if (unitClass.Equals("Mage"))
+        {
+            unit = ((GameObject)Instantiate(UserPlayerMagePrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
+            unit.gridPosition = gridPosition;
+            unit.setStats(unit, unitClass);
+            unit.MovementJump = 0.5f;
+            if (isAI == true)
+                unit.unitType = "AI";
+            unit.unitName = name;
+
+            return unit;
+        }
+
+        if (unitClass.Equals("Soldier"))
+        {
+            unit = ((GameObject)Instantiate(UserPlayerSoldierPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
+            unit.gridPosition = gridPosition;
+            unit.setStats(unit, unitClass);
+            unit.MovementJump = 0.5f;
+            if (isAI == true)
+                unit.unitType = "AI";
+            unit.unitName = name;
+            return unit;
+        }
+
+        else
+        {
+            Debug.Log("Unit hasn't been created");
+            unit = ((GameObject)Instantiate(UserPlayerSoldierPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
+            return unit;
+        }
     }
 
     void generatePlayers()
@@ -389,7 +459,7 @@ public class GameManager : MonoBehaviour
         Vector2 gridPosition = new Vector2(1, (MapHeight / 2));
 
 
-        player = createUnit(position, rotation, gridPosition, MenuScript.currentTeamList[0], true, "Bob");
+        player = createUnit(position, rotation, gridPosition, "Soldier", true, "Bob");
         team1.myRoster.Add(player);
 
         // end snippet
