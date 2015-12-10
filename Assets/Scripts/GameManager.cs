@@ -8,7 +8,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    static public GameObject UserPlayerPrefab;
+    static public GameObject UserPlayerCavalierPrefab;
+    static public GameObject UserPlayerKingPrefab;
+    static public GameObject UserPlayerKnightPrefab;
+    static public GameObject UserPlayerMagePrefab;
+    static public GameObject UserPlayerSoldierPrefab;
     static public GameObject AIPlayerPrefab;
 
     // Teams
@@ -60,7 +64,11 @@ public class GameManager : MonoBehaviour
         TilePrefab_e0 = Resources.Load<GameObject>("Prefabs/Tile_e0");
         TilePrefab_e1 = Resources.Load<GameObject>("Prefabs/Tile_e1");
         TilePrefab_e2 = Resources.Load<GameObject>("Prefabs/Tile_e2");
-        UserPlayerPrefab = Resources.Load<GameObject>("Prefabs/UserPlayer");
+        UserPlayerCavalierPrefab = Resources.Load<GameObject>("Prefabs/UserCavalier");
+        UserPlayerKingPrefab = Resources.Load<GameObject>("Prefabs/UserKing");
+        UserPlayerKnightPrefab = Resources.Load<GameObject>("Prefabs/UserKnight");
+        UserPlayerMagePrefab = Resources.Load<GameObject>("Prefabs/UserMage");
+        UserPlayerSoldierPrefab = Resources.Load<GameObject>("Prefabs/UserSoldier");
         AIPlayerPrefab = Resources.Load<GameObject>("Prefabs/AIPlayer");
 
         // Decorations
@@ -119,7 +127,6 @@ public class GameManager : MonoBehaviour
         //Check if game going
         if (!gameOver || !freezeGame)
         {
-            // Debug.Log(currentPlayerIndex.ToString());
             //UserPlayerPrefab.GetComponent<UnitActionsPlayer>().StopEverything();
             Movement.UnPaintTiles();
 
@@ -151,13 +158,11 @@ public class GameManager : MonoBehaviour
                         currentTeam = team2;
                         enemyTeam = team1;
                         team2TurnNum++;
-                        Debug.Log("Team 2 Turn Number: " + team2TurnNum);
                         break;
                     case "Team2":
                         currentTeam = team1;
                         enemyTeam = team2;
                         team1TurnNum++;
-                        Debug.Log("Team 1 Turn Number: " + team1TurnNum);
                         break;
                     default:
                         break;
@@ -224,7 +229,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Target is not in range!");
+                //Debug.Log("Target is not in range!");
             }
         }
         //        UserPlayerPrefab.GetComponent<UnitActionsPlayer>().StopEverything();
@@ -236,13 +241,11 @@ public class GameManager : MonoBehaviour
         {
             Unit.unitHP -= 1;
             Unit.unitPoisonCounter -= 1;
-            Debug.Log("Unit Poisoned for " + Unit.unitPoisonCounter + " more turns!");
             if (Unit.unitPoisonCounter == 0)
             {
                 Unit.isPoisoned = false;
                 Unit.unitPoisonCounter = 3;
                 Unit.unitStatus = "Normal";
-                Debug.Log("Congrats, your unit is NOT poisoned");
             }
         }
     }
@@ -331,10 +334,6 @@ public class GameManager : MonoBehaviour
         mapCenter = new Vector3(mapcenterX, 0.0f, mapcenterY);
         groundPlane.transform.position = mapCenter;
 
-        Debug.Log(mapcenterX);
-        Debug.Log(mapcenterY);
-        Debug.Log(mapCenter);
-        Debug.Log(groundPlane.transform.position);
 
         //set camera position to the center of the map
         //maybe do something like this whenever the controlling team switches, set camera position to average
@@ -358,28 +357,88 @@ public class GameManager : MonoBehaviour
         {
             Unit.unitHP -= 1;
             Unit.unitPoisonCounter -= 1;
-            Debug.Log("Unit Poisoned for " + Unit.unitPoisonCounter + " more turns!");
             if (Unit.unitPoisonCounter == 0)
             {
                 Unit.isPoisoned = false;
                 Unit.unitPoisonCounter = 3;
                 Unit.unitStatus = "Normal";
-                Debug.Log("Congrats, your unit is NOT poisoned");
             }
         }
     }
 
     public UnitActionsPlayer createUnit(Vector3 position, Quaternion rotation, Vector2 gridPosition, String unitClass, Boolean isAI, String name)
     {
-        UnitActionsPlayer unit = ((GameObject)Instantiate(UserPlayerPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
-        unit.gridPosition = gridPosition;
-        unit.setStats(unit, unitClass);
-        unit.MovementJump = 0.5f;
-        if (isAI == true)
-            unit.unitType = "AI";
-        unit.unitName = name;
+        UnitActionsPlayer unit;
+        if (unitClass.Equals("Cavalier"))
+        {
+            unit = ((GameObject)Instantiate(UserPlayerCavalierPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
+            unit.gridPosition = gridPosition;
+            unit.setStats(unit, unitClass);
+            unit.MovementJump = 0.5f;
+            if (isAI == true)
+                unit.unitType = "AI";
+            unit.unitName = name;
 
-        return unit;
+            return unit;
+        }
+            
+        if (unitClass.Equals("King"))
+        {
+            unit = ((GameObject)Instantiate(UserPlayerKingPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
+            unit.gridPosition = gridPosition;
+            unit.setStats(unit, unitClass);
+            unit.MovementJump = 0.5f;
+            if (isAI == true)
+                unit.unitType = "AI";
+            unit.unitName = name;
+
+            return unit;
+        }
+            
+        if (unitClass.Equals("Knight"))
+        {
+            unit = ((GameObject)Instantiate(UserPlayerKnightPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
+            unit.gridPosition = gridPosition;
+            unit.setStats(unit, unitClass);
+            unit.MovementJump = 0.5f;
+            if (isAI == true)
+                unit.unitType = "AI";
+            unit.unitName = name;
+
+            return unit;
+        }
+            
+        if (unitClass.Equals("Mage"))
+        {
+            unit = ((GameObject)Instantiate(UserPlayerMagePrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
+            unit.gridPosition = gridPosition;
+            unit.setStats(unit, unitClass);
+            unit.MovementJump = 0.5f;
+            if (isAI == true)
+                unit.unitType = "AI";
+            unit.unitName = name;
+
+            return unit;
+        }
+
+        if (unitClass.Equals("Soldier"))
+        {
+            unit = ((GameObject)Instantiate(UserPlayerSoldierPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
+            unit.gridPosition = gridPosition;
+            unit.setStats(unit, unitClass);
+            unit.MovementJump = 0.5f;
+            if (isAI == true)
+                unit.unitType = "AI";
+            unit.unitName = name;
+            return unit;
+        }
+
+        else
+        {
+            Debug.Log("Unit hasn't been created");
+            unit = ((GameObject)Instantiate(UserPlayerSoldierPrefab, position, rotation)).GetComponent<UnitActionsPlayer>();
+            return unit;
+        }
     }
 
     void generatePlayers()
@@ -400,7 +459,7 @@ public class GameManager : MonoBehaviour
         Vector2 gridPosition = new Vector2(1, (MapHeight / 2));
 
 
-        player = createUnit(position, rotation, gridPosition, MenuScript.currentTeamList[0], true, "Bob");
+        player = createUnit(position, rotation, gridPosition, "Soldier", true, "Bob");
         team1.myRoster.Add(player);
 
         // end snippet
@@ -439,42 +498,8 @@ public class GameManager : MonoBehaviour
             position = new Vector3((MapWidth - 1), 1.5f, -i + Mathf.Floor(MapHeight / 2));
             rotation = Quaternion.Euler(new Vector3());
             gridPosition = new Vector2(MapWidth - 1, i);
-            player = createUnit(position, rotation, gridPosition, MenuScript.currentTeamList[i - 1], false, "Player " + i);
+            player = createUnit(position, rotation, gridPosition, MenuScript.currentTeamList[i - 1], false, MenuScript.currentTeamNameList[i-1]);
             team2.myRoster.Add(player);
         }
-        /*position = new Vector3((MapWidth - 1), 1.5f, -1 + Mathf.Floor(MapHeight / 2));
-        rotation = Quaternion.Euler(new Vector3());
-        gridPosition = new Vector2(MapWidth - 1, 1);
-
-        player = createUnit(position, rotation, gridPosition, "Soldier", false, "Steve");
-        team2.myRoster.Add(player);
-
-        position = new Vector3((MapWidth - 1), 1.5f, -2 + Mathf.Floor(MapHeight / 2));
-        rotation = Quaternion.Euler(new Vector3());
-        gridPosition = new Vector2(MapWidth - 1, 2);
-
-        player = createUnit(position, rotation, gridPosition, "Cavalier", false, "Tyler");
-        team2.myRoster.Add(player);
-
-        position = new Vector3((MapWidth - 1), 1.5f, -3 + Mathf.Floor(MapHeight / 2));
-        rotation = Quaternion.Euler(new Vector3());
-        gridPosition = new Vector2(MapWidth - 1, 3);
-
-        player = createUnit(position, rotation, gridPosition, "King", false, "Aziz");
-        team2.myRoster.Add(player);
-
-        position = new Vector3((MapWidth - 1), 1.5f, -4 + Mathf.Floor(MapHeight / 2));
-        rotation = Quaternion.Euler(new Vector3());
-        gridPosition = new Vector2(MapWidth - 1, 4);
-
-        player = createUnit(position, rotation, gridPosition, "Knight", false, "Sir William");
-        team2.myRoster.Add(player);
-
-        position = new Vector3((MapWidth - 1), 1.5f, -5 + Mathf.Floor(MapHeight / 2));
-        rotation = Quaternion.Euler(new Vector3());
-        gridPosition = new Vector2(MapWidth - 1, 5);
-
-        player = createUnit(position, rotation, gridPosition, "Mage", false, "Nathan");
-        team2.myRoster.Add(player);*/
     }
 }
