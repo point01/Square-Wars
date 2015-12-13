@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     static public GameObject UserPlayerPrefab;
     static public GameObject AIPlayerPrefab;
 
+    // Helper for start state
+    public string startupState = "none";
+
     // Teams
     static public Team team1 = new Team();
     static public Team team2 = new Team();
@@ -39,6 +42,7 @@ public class GameManager : MonoBehaviour
     static public float mapcenterY;
     static public Vector3 mapCenter;
 
+    // Game board
     static public List<List<Tile>> map = new List<List<Tile>>();
     static public int currentPlayerIndex = 0;
     static public UnitActions CurrentTurnPlayer;
@@ -70,6 +74,9 @@ public class GameManager : MonoBehaviour
     {
         // Load map and set related decorations
         generateMapFromFile("Maps/example1");
+
+        // Enter placement mode
+        placeUnits();
 
         //Place units on board
         //This will later include a call to manual unit placement function
@@ -270,10 +277,12 @@ public class GameManager : MonoBehaviour
 
                 string env = attributes[0];                 //Get string representation of tile type
                 int height = Int32.Parse(attributes[1]);    //get int representation of tile height
+                string starter = attributes[2];
 
                 Vector3 position = new Vector3(xCoord, (height / 4.0f), yCoord);
                 Quaternion rotation = Quaternion.Euler(new Vector3());
 
+                // Set block height
                 switch (height)     // Set height
                 {
                     case 1:
@@ -290,9 +299,11 @@ public class GameManager : MonoBehaviour
                         break;
                 }
 
+                // Select appropriate prefab for height
                 GameObject block = Instantiate(tilePrefab, position, rotation) as GameObject;
                 Tile tile = block.GetComponent<Tile>();
 
+                // Set block environment in tile
                 switch (env)        // Create block based on height, type
                 {
                     case "barrier":
@@ -312,6 +323,17 @@ public class GameManager : MonoBehaviour
                         tile.setEnvironment("forest");
                         break;
                 }
+
+                if (starter == "nostart")
+                {
+                    tile.IsStarterArea = false;
+                }
+
+                if (starter == "start")
+                {
+                    tile.IsStarterArea = true;
+                }
+
                 tile.gridPosition = new Vector2(xCoord, yCoord);    // Add tile's own position on grid to the tile
                 column.Add(tile);                                   // Add tile to the column
                 yCoord += 1;                                        // Increment yCoord for next run
@@ -339,6 +361,12 @@ public class GameManager : MonoBehaviour
         Instantiate(groundPlane, mapCenter, Quaternion.Euler(new Vector3()));
 
     }
+
+    void placeUnits()
+    {
+        startupState = "placement";
+    }
+
 
     //Called when one team has run out of playable players
     void endGame()

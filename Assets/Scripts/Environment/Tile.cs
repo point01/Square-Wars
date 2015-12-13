@@ -10,6 +10,7 @@ public class Tile : MonoBehaviour
     public UnitActions containedUnit;
     public string tileStatus;
     public bool isAccessible;
+    public bool isStarterArea;
     public int MoveCost = 1;
     public float elevation { get { return transform.position.y; } set { transform.position.Set(transform.position.x, value, transform.position.z); } }
     public Color tileColor;
@@ -30,6 +31,12 @@ public class Tile : MonoBehaviour
     {
         get { return envType; }
         set { envType = value; }
+    }
+
+    public bool IsStarterArea
+    {
+        get { return isStarterArea; }
+        set { isStarterArea = value; }
     }
 
     public void setEnvironment (string env)
