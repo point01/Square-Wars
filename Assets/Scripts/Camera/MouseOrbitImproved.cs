@@ -3,6 +3,10 @@ using System.Collections;
 
 [DisallowMultipleComponent]
 [AddComponentMenu("Camera-Control/Mouse Orbit with zoom")]
+
+// Adapted from the Unify Wiki example
+// http://wiki.unity3d.com/index.php?title=MouseOrbitImproved
+
 public class MouseOrbitImproved : MonoBehaviour
 {
 
