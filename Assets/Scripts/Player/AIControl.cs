@@ -138,6 +138,11 @@ public class AIControl : MonoBehaviour
             UnitActions target = possibleTargets[0];
             foreach (UnitActions p in possibleTargets)
             {
+
+                if(p.unitHP < GameManager.CurrentTurnPlayer.unitSTR)
+                {
+                    target = p;
+                }else 
                 if (p.unitHP < target.unitHP)
                 {
                     target = p;
@@ -183,6 +188,44 @@ public class AIControl : MonoBehaviour
                 {
                     target = p;
                 }
+                switch (GameManager.CurrentTurnPlayer.unitClass)
+                {
+                    case "Knight":
+                        if(p.unitClass == "Mage" || p.unitClass == "Soldier")
+                        {
+                            target = p;
+                        }
+                        break;
+                    case "Soldier":
+                        if (p.unitClass == "Soldier" || p.unitClass == "King")
+                        {
+                            target = p;
+                        }
+                        break;
+                    case "Mage":
+                        if (p.unitClass == "Cavalier" || p.unitClass == "King")
+                        {
+                            target = p;
+                        }
+                        break;
+                    case "Cavalier":
+                        if (p.unitClass == "Mage" || p.unitClass == "Soldier")
+                        {
+                            target = p;
+                        }
+                        break;
+                    case "King":
+                        if (p.unitClass == "Knight" || p.unitClass == "Soldier")
+                        {
+                            target = p;
+                        }
+                        break;
+
+
+                    default:
+                        break;
+                }
+                
             }
             //Attack target
             GameManager.attackWithCurrentPlayer(Movement.GetTileFromPlayer(target));
